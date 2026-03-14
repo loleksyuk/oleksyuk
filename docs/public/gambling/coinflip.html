@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coin Flip | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .coinflip-container {
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .balance-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--success);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .balance-display::before {
+            content: '💰 $';
+        }
+        
+        .coin-container {
+            perspective: 1000px;
+            margin: var(--space-2xl) 0;
+        }
+        
+        .coin {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s;
+        }
+        
+        .coin.flipping {
+            animation: flipCoin 2s ease-out forwards;
+        }
+        
+        @keyframes flipCoin {
+            0% { transform: rotateY(0); }
+            100% { transform: rotateY(1800deg); }
+        }
+        
+        .coin-side {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+        
+        .coin-heads {
+            background: linear-gradient(145deg, #aab7e4, #7487c7);
+            border: 6px solid #5a6da9;
+        }
+        
+        .coin-tails {
+            background: linear-gradient(145deg, #c0c0c0, #808080);
+            border: 6px solid #606060;
+            transform: rotateY(180deg);
+        }
+        
+        .choice-buttons {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .choice-btn {
+            padding: var(--space-lg) var(--space-2xl);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            background: var(--oleksyuk-card);
+            border: 2px solid var(--oleksyuk-border);
+            color: var(--text-primary);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .choice-btn:hover {
+            background: var(--oleksyuk-hover);
+            transform: translateY(-4px);
+        }
+        
+        .choice-btn.selected {
+            border-color: var(--accent-primary);
+            background: rgba(142, 161, 216, 0.12);
+            box-shadow: 0 0 20px rgba(126, 144, 208, 0.28);
+        }
+        
+        .choice-btn span {
+            font-size: 2.5rem;
+        }
+        
+        .bet-section {
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .bet-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+        
+        .bet-input {
+            width: 150px;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+        }
+        
+        .quick-bets {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin-top: var(--space-md);
+        }
+        
+        .quick-bet {
+            padding: var(--space-xs) var(--space-md);
+            font-size: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--oleksyuk-border);
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .quick-bet:hover {
+            background: var(--oleksyuk-hover);
+            border-color: var(--accent-primary);
+        }
+        
+        .result-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            min-height: 2rem;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-xl);
+            padding: var(--space-md);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-md);
+            margin-top: var(--space-xl);
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+        }
+        
+        .stat-value.wins { color: var(--success); }
+        .stat-value.losses { color: var(--danger); }
+        
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk Coin Flip
+                    </h1>
+                    <p class="page-subtitle">50/50 chance to double your bet</p>
+                </header>
+                
+                <div class="coinflip-container">
+                    <div class="balance-display animate-fade-in-up stagger-1" id="balance">10000</div>
+                    
+                    <div class="choice-buttons animate-fade-in-up stagger-2">
+                        <button class="choice-btn" data-choice="heads" onclick="selectChoice('heads')">
+                            <span>👑</span>
+                            HEADS
+                        </button>
+                        <button class="choice-btn" data-choice="tails" onclick="selectChoice('tails')">
+                            <span>🦅</span>
+                            TAILS
+                        </button>
+                    </div>
+                    
+                    <div class="coin-container animate-fade-in-up stagger-3">
+                        <div class="coin" id="coin">
+                            <div class="coin-side coin-heads">👑</div>
+                            <div class="coin-side coin-tails">🦅</div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-text animate-fade-in-up stagger-4" id="result">Pick heads or tails!</div>
+                    
+                    <div class="bet-section animate-fade-in-up stagger-5">
+                        <div class="bet-row">
+                            <span style="color: var(--text-secondary);">Bet Amount:</span>
+                            <input type="number" class="bet-input" id="betAmount" value="100" min="1">
+                        </div>
+                        <div class="quick-bets">
+                            <button class="quick-bet" onclick="setBet(100)">$100</button>
+                            <button class="quick-bet" onclick="setBet(500)">$500</button>
+                            <button class="quick-bet" onclick="setBet(1000)">$1K</button>
+                            <button class="quick-bet" onclick="setBet('half')">Half</button>
+                            <button class="quick-bet" onclick="setBet('all')">All In</button>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary btn-lg animate-fade-in-up stagger-6" id="flipBtn" onclick="flipCoin()">
+                        🪙 FLIP COIN
+                    </button>
+                    
+                    <div class="stats-row animate-fade-in-up stagger-7">
+                        <div class="stat">
+                            <div class="stat-value wins" id="wins">0</div>
+                            <div class="stat-label">Wins</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value losses" id="losses">0</div>
+                            <div class="stat-label">Losses</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="streak">0</div>
+                            <div class="stat-label">Streak</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-8">
+                        ← Back to Casino
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let balance = 10000;
+        let selectedChoice = null;
+        let flipping = false;
+        let wins = 0, losses = 0, streak = 0;
+        
+        window.onload = function() {
+            const saved = localStorage.getItem('coinflipBalance');
+            if (saved) balance = parseFloat(saved);
+            wins = parseInt(localStorage.getItem('coinflipWins')) || 0;
+            losses = parseInt(localStorage.getItem('coinflipLosses')) || 0;
+            updateUI();
+        };
+        
+        function updateUI() {
+            document.getElementById('balance').textContent = balance.toLocaleString();
+            document.getElementById('wins').textContent = wins;
+            document.getElementById('losses').textContent = losses;
+            document.getElementById('streak').textContent = streak;
+            localStorage.setItem('coinflipBalance', balance);
+            localStorage.setItem('coinflipWins', wins);
+            localStorage.setItem('coinflipLosses', losses);
+        }
+        
+        function selectChoice(choice) {
+            selectedChoice = choice;
+            document.querySelectorAll('.choice-btn').forEach(btn => btn.classList.remove('selected'));
+            document.querySelector(`[data-choice="${choice}"]`).classList.add('selected');
+        }
+        
+        function setBet(amount) {
+            if (amount === 'half') {
+                document.getElementById('betAmount').value = Math.floor(balance / 2);
+            } else if (amount === 'all') {
+                document.getElementById('betAmount').value = balance;
+            } else {
+                document.getElementById('betAmount').value = amount;
+            }
+        }
+        
+        function flipCoin() {
+            if (flipping) return;
+            
+            const betAmount = parseInt(document.getElementById('betAmount').value);
+            
+            if (!selectedChoice) {
+                alert('Please select Heads or Tails');
+                return;
+            }
+            if (isNaN(betAmount) || betAmount <= 0) {
+                alert('Please enter a valid bet amount');
+                return;
+            }
+            if (betAmount > balance) {
+                alert('Insufficient balance');
+                return;
+            }
+            
+            flipping = true;
+            balance -= betAmount;
+            updateUI();
+            
+            document.getElementById('flipBtn').disabled = true;
+            document.getElementById('result').textContent = 'Flipping...';
+            document.getElementById('result').style.color = 'var(--text-primary)';
+            
+            const coin = document.getElementById('coin');
+            coin.classList.add('flipping');
+            
+            // Random result
+            const result = Math.random() < 0.5 ? 'heads' : 'tails';
+            
+            setTimeout(() => {
+                coin.classList.remove('flipping');
+                
+                // Set final rotation based on result
+                coin.style.transform = result === 'heads' ? 'rotateY(0deg)' : 'rotateY(180deg)';
+                
+                if (selectedChoice === result) {
+                    const winAmount = betAmount * 2;
+                    balance += winAmount;
+                    wins++;
+                    streak = streak >= 0 ? streak + 1 : 1;
+                    document.getElementById('result').textContent = `🎉 ${result.toUpperCase()}! You win $${winAmount.toLocaleString()}!`;
+                    document.getElementById('result').style.color = 'var(--success)';
+                } else {
+                    losses++;
+                    streak = streak <= 0 ? streak - 1 : -1;
+                    document.getElementById('result').textContent = `💔 ${result.toUpperCase()}! You lose $${betAmount.toLocaleString()}`;
+                    document.getElementById('result').style.color = 'var(--danger)';
+                }
+                
+                document.getElementById('streak').style.color = streak > 0 ? 'var(--success)' : streak < 0 ? 'var(--danger)' : 'var(--text-primary)';
+                
+                updateUI();
+                flipping = false;
+                document.getElementById('flipBtn').disabled = false;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

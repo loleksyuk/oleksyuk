@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translators | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .translators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-xl);
+        }
+        
+        .translator-card {
+            display: flex;
+            flex-direction: column;
+            padding: var(--space-xl);
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .translator-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(124, 92, 255, 0.05), rgba(92, 140, 255, 0.05));
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+        }
+        
+        .translator-card:hover {
+            background: var(--oleksyuk-hover);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-md), var(--shadow-glow);
+            border-color: var(--accent-primary);
+        }
+        
+        .translator-card:hover::before {
+            opacity: 1;
+        }
+        
+        .translator-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+            position: relative;
+        }
+        
+        .translator-icon {
+            font-size: 3rem;
+            transition: transform var(--transition-normal);
+        }
+        
+        .translator-card:hover .translator-icon {
+            transform: scale(1.15) rotate(-5deg);
+        }
+        
+        .translator-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .translator-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            position: relative;
+        }
+        
+        .coming-soon-badge {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            padding: 4px 12px;
+            background: rgba(251, 191, 36, 0.2);
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            border-radius: var(--radius-sm);
+            font-size: 0.625rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--warning);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk Translators
+                    </h1>
+                    <p class="page-subtitle">Fun language translation tools</p>
+                </header>
+                
+                <div class="translators-grid">
+                    <a href="./translators/minecraft&english.html" class="translator-card animate-fade-in-up stagger-1">
+                        <div class="translator-header">
+                            <span class="translator-icon">⛏️</span>
+                            <span class="translator-name">Minecraft Enchanting</span>
+                        </div>
+                        <p class="translator-desc">
+                            Translate between English and the mysterious Standard Galactic Alphabet used in Minecraft's enchanting table.
+                        </p>
+                    </a>
+                    
+                    <div class="translator-card animate-fade-in-up stagger-2" style="opacity: 0.6; cursor: not-allowed;">
+                        <span class="coming-soon-badge">Coming Soon</span>
+                        <div class="translator-header">
+                            <span class="translator-icon">👽</span>
+                            <span class="translator-name">Alien Script</span>
+                        </div>
+                        <p class="translator-desc">
+                            Convert text to and from various sci-fi alien languages and symbols.
+                        </p>
+                    </div>
+                    
+                    <div class="translator-card animate-fade-in-up stagger-3" style="opacity: 0.6; cursor: not-allowed;">
+                        <span class="coming-soon-badge">Coming Soon</span>
+                        <div class="translator-header">
+                            <span class="translator-icon">🔣</span>
+                            <span class="translator-name">Symbol Text</span>
+                        </div>
+                        <p class="translator-desc">
+                            Transform regular text into fancy Unicode symbols and decorative fonts.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-4">
+                        ← Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

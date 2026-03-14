@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Translator | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .translator-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .mode-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .mode-btn {
+            padding: var(--space-md) var(--space-xl);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.875rem;
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .mode-btn:first-child {
+            border-radius: var(--radius-md) 0 0 var(--radius-md);
+            border-right: none;
+        }
+        
+        .mode-btn:last-child {
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+        
+        .mode-btn.active {
+            background: var(--accent-gradient);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+        
+        .mode-btn:hover:not(.active) {
+            background: var(--oleksyuk-hover);
+        }
+        
+        .text-area-group {
+            margin-bottom: var(--space-lg);
+        }
+        
+        .text-area-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .text-area-label span {
+            font-size: 1.25rem;
+        }
+        
+        .text-area {
+            width: 100%;
+            min-height: 120px;
+            padding: var(--space-md);
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            line-height: 1.6;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            resize: vertical;
+            outline: none;
+            transition: all var(--transition-fast);
+        }
+        
+        .text-area:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        
+        .text-area.output {
+            background: var(--oleksyuk-card);
+            color: var(--success);
+            font-size: 1.125rem;
+        }
+        
+        .action-row {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .swap-icon {
+            display: flex;
+            justify-content: center;
+            margin: var(--space-md) 0;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+        }
+        
+        .info-box {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-top: var(--space-xl);
+        }
+        
+        .info-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .alphabet-display {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 2;
+            word-spacing: 0.5em;
+        }
+        
+        .alphabet-display .mc {
+            color: var(--success);
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk Enchanting Table
+                    </h1>
+                    <p class="page-subtitle">Translate to/from Minecraft's Standard Galactic Alphabet</p>
+                </header>
+                
+                <div class="translator-container">
+                    <div class="mode-toggle animate-fade-in-up stagger-1">
+                        <button class="mode-btn active" id="modeEng" onclick="setMode(true)">
+                            English → Minecraft
+                        </button>
+                        <button class="mode-btn" id="modeMc" onclick="setMode(false)">
+                            Minecraft → English
+                        </button>
+                    </div>
+                    
+                    <div class="text-area-group animate-fade-in-up stagger-2">
+                        <label class="text-area-label" id="inputLabel">
+                            <span>✍️</span> Enter English Text
+                        </label>
+                        <textarea class="text-area" id="inputText" placeholder="Type your text here..." oninput="translateText()"></textarea>
+                    </div>
+                    
+                    <div class="swap-icon animate-fade-in-up stagger-2">↓</div>
+                    
+                    <div class="text-area-group animate-fade-in-up stagger-3">
+                        <label class="text-area-label" id="outputLabel">
+                            <span>✨</span> Minecraft Enchanting Text
+                        </label>
+                        <textarea class="text-area output" id="outputText" readonly placeholder="Translation will appear here..."></textarea>
+                    </div>
+                    
+                    <div class="action-row animate-fade-in-up stagger-4">
+                        <button class="btn btn-primary" onclick="copyOutput()">📋 Copy Result</button>
+                        <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
+                    </div>
+                    
+                    <div class="info-box animate-fade-in-up stagger-5">
+                        <div class="info-title">
+                            <span>📜</span> Standard Galactic Alphabet
+                        </div>
+                        <div class="alphabet-display">
+                            a=<span class="mc">ᔑ</span> b=<span class="mc">ʖ</span> c=<span class="mc">ᓵ</span> d=<span class="mc">↸</span> e=<span class="mc">ᒷ</span> f=<span class="mc">⎓</span> g=<span class="mc">⊣</span> h=<span class="mc">⍑</span> i=<span class="mc">╎</span> j=<span class="mc">⋮</span> k=<span class="mc">ꖌ</span> l=<span class="mc">ꖎ</span> m=<span class="mc">ᒲ</span> n=<span class="mc">リ</span> o=<span class="mc">𝙹</span> p=<span class="mc">!!</span> q=<span class="mc">ᑑ</span> r=<span class="mc">∷</span> s=<span class="mc">ᓭ</span> t=<span class="mc">ℸ ̣</span> u=<span class="mc">⚍</span> v=<span class="mc">⍊</span> w=<span class="mc">∴</span> x=<span class="mc"> ̇/</span> y=<span class="mc">||</span> z=<span class="mc">⨅</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="../translators.html" class="menu-link back-link animate-fade-in-up stagger-6">
+                        ← Back to Translators
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const englishAlphabet = 'abcdefghijklmnopqrstuvwxyz';
+        const minecraftAlphabet = 'ᔑʖᓵ↸ᒷ⎓⊣⍑╎⋮ꖌꖎᒲリ𝙹!!ᑑ∷ᓭℸ ̣ ⚍⍊∴ ̇/||⨅';
+        let isEnglishToMinecraft = true;
+
+        const englishToMinecraftMap = new Map();
+        const minecraftToEnglishMap = new Map();
+        for (let i = 0; i < englishAlphabet.length; i++) {
+            englishToMinecraftMap.set(englishAlphabet[i], minecraftAlphabet[i]);
+            minecraftToEnglishMap.set(minecraftAlphabet[i], englishAlphabet[i]);
+        }
+
+        function setMode(engToMc) {
+            isEnglishToMinecraft = engToMc;
+            document.getElementById('modeEng').classList.toggle('active', engToMc);
+            document.getElementById('modeMc').classList.toggle('active', !engToMc);
+            
+            if (engToMc) {
+                document.getElementById('inputLabel').innerHTML = '<span>✍️</span> Enter English Text';
+                document.getElementById('outputLabel').innerHTML = '<span>✨</span> Minecraft Enchanting Text';
+            } else {
+                document.getElementById('inputLabel').innerHTML = '<span>✨</span> Enter Minecraft Text';
+                document.getElementById('outputLabel').innerHTML = '<span>✍️</span> English Translation';
+            }
+            translateText();
+        }
+
+        function translateText() {
+            const inputText = document.getElementById('inputText').value.toLowerCase();
+            let translatedText = '';
+
+            if (isEnglishToMinecraft) {
+                for (let char of inputText) {
+                    translatedText += englishToMinecraftMap.get(char) || char;
+                }
+            } else {
+                for (let char of inputText) {
+                    translatedText += minecraftToEnglishMap.get(char) || char;
+                }
+            }
+
+            document.getElementById('outputText').value = translatedText;
+        }
+
+        function copyOutput() {
+            const output = document.getElementById('outputText').value;
+            if (output) {
+                navigator.clipboard.writeText(output).then(() => {
+                    const btn = event.target;
+                    btn.textContent = '✓ Copied!';
+                    setTimeout(() => btn.textContent = '📋 Copy Result', 2000);
+                });
+            }
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('outputText').value = '';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EaglerX Clients | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .clients-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .version-section {
+            margin-bottom: var(--space-2xl);
+        }
+        
+        .version-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md) var(--space-lg);
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            margin-bottom: var(--space-md);
+        }
+        
+        .version-header:hover {
+            background: var(--oleksyuk-hover);
+            border-color: var(--accent-primary);
+        }
+        
+        .version-header.active {
+            background: var(--oleksyuk-hover);
+            border-color: var(--accent-primary);
+        }
+        
+        .version-icon {
+            font-size: 2rem;
+        }
+        
+        .version-info {
+            flex: 1;
+        }
+        
+        .version-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .version-count {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .version-toggle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            transition: transform var(--transition-normal);
+        }
+        
+        .version-header.active .version-toggle {
+            transform: rotate(180deg);
+        }
+        
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-md);
+            display: none;
+        }
+        
+        .clients-grid.show {
+            display: grid;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .client-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--space-lg);
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+        
+        .client-card:hover {
+            background: var(--oleksyuk-hover);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md), 0 0 20px rgba(0, 255, 100, 0.15);
+            border-color: #4ade80;
+        }
+        
+        .client-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .client-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.875rem;
+            text-align: center;
+            color: var(--text-primary);
+        }
+        
+        .info-box {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-bottom: var(--space-xl);
+            font-size: 0.875rem;
+            color: var(--success);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk EaglerX
+                    </h1>
+                    <p class="page-subtitle">Minecraft clients hidden from blockers</p>
+                </header>
+                
+                <div class="clients-container">
+                    <div class="info-box animate-fade-in-up stagger-1">
+                        🎮 Click any client to launch it in a cloaked about:blank window
+                    </div>
+                    
+                    <div class="version-section animate-fade-in-up stagger-2">
+                        <div class="version-header" onclick="toggleSection('v112')">
+                            <span class="version-icon">⛏️</span>
+                            <div class="version-info">
+                                <div class="version-title">1.12 Clients</div>
+                                <div class="version-count">2 clients available</div>
+                            </div>
+                            <span class="version-toggle">▼</span>
+                        </div>
+                        <div class="clients-grid" id="v112">
+                            <div class="client-card" onclick="openClient('https://0bsidian.s3.us-east-2.amazonaws.com/1.12/Eaglercraft_1.12_Offline_en_US+(1).html')">
+                                <span class="client-icon">🟢</span>
+                                <span class="client-name">Eaglercraft 1.12</span>
+                            </div>
+                            <div class="client-card" onclick="openClient('https://0bsidian.s3.us-east-2.amazonaws.com/1.12/PixelClient+1.12.2+JS+Offline+(1).html')">
+                                <span class="client-icon">🟣</span>
+                                <span class="client-name">PixelClient 1.12</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="version-section animate-fade-in-up stagger-3">
+                        <div class="version-header" onclick="toggleSection('v18')">
+                            <span class="version-icon">⚔️</span>
+                            <div class="version-info">
+                                <div class="version-title">1.8 Clients</div>
+                                <div class="version-count">16 clients available</div>
+                            </div>
+                            <span class="version-toggle">▼</span>
+                        </div>
+                        <div class="clients-grid" id="v18">
+                            <div class="client-card" onclick="openClient('https://0bsidian.s3.us-east-2.amazonaws.com/1.8/DragonX+V1.html')">
+                                <span class="client-icon">🐉</span>
+                                <span class="client-name">DragonX V1</span>
+                            </div>
+                            <div class="client-card" onclick="openClient('https://0bsidian.s3.us-east-2.amazonaws.com/1.8/DragonX+V2+Premium.html')">
+                                <span class="client-icon">🐉</span>
+                                <span class="client-name">DragonX V2 Premium</span>
+                            </div>
+                            <div class="client-card" onclick="openClient('https://0bsidian.s3.us-east-2.amazonaws.com/1.8/DragonX+V3+Client+(1).html')">
+                                <span class="client-icon">🐉</span>
+                                <span class="client-name">DragonX V3</span>
+                            </div>
+                            <div class="client-card" onclick="openClient('https://0bsidian.s3.us-east-2.amazonaws.com/1.8/DragonX+V4.html')">
+                                <span class="client-icon">🐉</span>
+                                <span class="client-name">DragonX V4</span>
+                            </div>
+                            <div class="client-card" onclick="openClient('https://0bsidian.s3.us-east-2.amazonaws.com/1.8/DragonXLite.html')">
+                                <span class="client-icon">🐉</span>
+                                <span class="client-name">DragonX Lite</span>
+                            </div>
+                            <div class="client-card" onclick="openClient('https://0bsidian.s3.us-east-2.amazonaws.com/1.8/DragonXV5.html')">
+                                <span class="client-icon">🐉</span>
+                                <span class="client-name">DragonX V5</span>
+                            </div>
+                            <div class="client-card" onclick="openClient('https://0bsidian.s3.us-east-2.amazonaws.com/1.8/MeteorX.html')">
+                                <span class="client-icon">☄️</span>
+                                <span class="client-name">MeteorX</span>
+                            </div>
+                            <div class="client-card" onclick="openClient('https://0bsidian.s3.us-east-2.amazonaws.com/1.8/PiClient.html')">
+                                <span class="client-icon">🥧</span>
+                                <span class="client-name">PiClient</span>
+                            </div>
+                            <div class="client-card" onclick="openClient('https://0bsidian.s3.us-east-2.amazonaws.com/1.8/PixelClient+1.8.8+JS+Offline+(1).html')">
+                                <span class="client-icon">🟣</span>
+                                <span class="client-name">PixelClient</span>
+                            </div>
+                            <div class="client-card" onclick="openClient('https://0bsidian.s3.us-east-2.amazonaws.com/1.8/Resent-4.0-Patch-4-Signed.html')">
+                                <span class="client-icon">🔴</span>
+                                <span class="client-name">Resent 4.0</span>
+                            </div>
+                            <div class="client-card" onclick="openClient('https://0bsidian.s3.us-east-2.amazonaws.com/1.8/UwU-client-b2.html')">
+                                <span class="client-icon">🩷</span>
+                                <span class="client-name">UwU Client</span>
+                            </div>
+                            <div class="client-card" onclick="openClient('https://0bsidian.s3.us-east-2.amazonaws.com/1.8/v3b12.html')">
+                                <span class="client-icon">🔵</span>
+                                <span class="client-name">v3b12</span>
+                            </div>
+                            <div class="client-card" onclick="openClient('https://0bsidian.s3.us-east-2.amazonaws.com/1.8/v3b13.html')">
+                                <span class="client-icon">🔵</span>
+                                <span class="client-name">v3b13</span>
+                            </div>
+                            <div class="client-card" onclick="openClient('https://0bsidian.s3.us-east-2.amazonaws.com/1.8/WurstX.html')">
+                                <span class="client-icon">🌭</span>
+                                <span class="client-name">WurstX</span>
+                            </div>
+                            <div class="client-card" onclick="openClient('https://0bsidian.s3.us-east-2.amazonaws.com/1.8/qORNClient.html')">
+                                <span class="client-icon">🌽</span>
+                                <span class="client-name">Qorn Client</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-4">
+                        ← Back to Minecraft
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let sharedWindow = null;
+        let lastClickTime = 0;
+        const debounceDelay = 1000;
+
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const header = section.previousElementSibling;
+            
+            section.classList.toggle('show');
+            header.classList.toggle('active');
+        }
+
+        function openClient(url) {
+            const currentTime = Date.now();
+            if (currentTime - lastClickTime < debounceDelay) return;
+            lastClickTime = currentTime;
+
+            try {
+                if (!sharedWindow || sharedWindow.closed) {
+                    sharedWindow = window.open('about:blank', 'eaglerxWindow');
+                    if (!sharedWindow) {
+                        alert('Popup blocked. Please allow popups for this site.');
+                        return;
+                    }
+                    sharedWindow.document.write(`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>Google Classroom</title>
+                            <link rel="icon" type="image/png" href="https://ssl.gstatic.com/classroom/favicon.png">
+                            <style>
+                                body, html {
+                                    margin: 0;
+                                    height: 100%;
+                                    overflow: hidden;
+                                    background: #000;
+                                }
+                                #loadingOverlay {
+                                    position: fixed;
+                                    top: 0;
+                                    left: 0;
+                                    width: 100%;
+                                    height: 100%;
+                                    background: url('https://0bsidian.s3.us-east-2.amazonaws.com/Images/14850924-background_xl.webp') center/cover;
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    color: #fff;
+                                    font-family: 'Minecraft', 'Courier New', monospace;
+                                    font-size: 2em;
+                                    text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+                                    transition: opacity 0.5s ease;
+                                    z-index: 1000;
+                                }
+                                iframe {
+                                    width: 100%;
+                                    height: 100%;
+                                    border: none;
+                                    opacity: 0;
+                                    transition: opacity 0.5s ease;
+                                }
+                                iframe.loaded {
+                                    opacity: 1;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <div id="loadingOverlay">Loading Minecraft...</div>
+                            <iframe id="contentFrame" allowfullscreen></iframe>
+                        </body>
+                        </html>
+                    `);
+                    sharedWindow.document.close();
+                }
+
+                const iframe = sharedWindow.document.getElementById('contentFrame');
+                const loadingOverlay = sharedWindow.document.getElementById('loadingOverlay');
+
+                iframe.classList.remove('loaded');
+                loadingOverlay.style.opacity = '1';
+                loadingOverlay.style.display = 'flex';
+
+                iframe.onload = function() {
+                    loadingOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingOverlay.style.display = 'none';
+                        iframe.classList.add('loaded');
+                    }, 500);
+                };
+
+                iframe.src = url;
+                sharedWindow.focus();
+            } catch (e) {
+                window.open(url, '_blank');
+            }
+        }
+
+        window.onbeforeunload = function() {
+            if (sharedWindow && !sharedWindow.closed) {
+                sharedWindow.close();
+            }
+        };
+    </script>
+</body>
+</html>

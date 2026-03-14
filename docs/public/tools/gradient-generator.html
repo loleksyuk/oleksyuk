@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Generator | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .tool-shell { max-width: 900px; margin: 0 auto; }
+        .panel { background: var(--oleksyuk-card); border: 1px solid var(--oleksyuk-border); border-radius: var(--radius-lg); padding: var(--space-xl); }
+        .preview { height: 220px; border-radius: var(--radius-lg); border: 1px solid var(--oleksyuk-border); margin: var(--space-lg) 0; }
+        .code-output { font-family: 'Space Mono', monospace; white-space: pre-wrap; color: var(--accent-secondary); background: rgba(0, 0, 0, 0.24); border-radius: var(--radius-md); padding: var(--space-md); }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">Gradient Generator</h1>
+                    <p class="page-subtitle">Build a linear gradient and copy the CSS declaration.</p>
+                </header>
+                <div class="tool-shell">
+                    <section class="panel animate-fade-in-up stagger-1">
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="gradientAngle">Angle</label>
+                                <input id="gradientAngle" type="range" min="0" max="360" value="135" oninput="renderGradient()">
+                            </div>
+                            <div class="input-group">
+                                <label for="gradientColorA">Color One</label>
+                                <input id="gradientColorA" type="color" value="#8ea1d8" oninput="renderGradient()">
+                            </div>
+                            <div class="input-group">
+                                <label for="gradientColorB">Color Two</label>
+                                <input id="gradientColorB" type="color" value="#4c5f99" oninput="renderGradient()">
+                            </div>
+                        </div>
+                        <div id="gradientPreview" class="preview"></div>
+                        <div id="gradientCode" class="code-output"></div>
+                        <div class="action-row" style="justify-content: flex-start; margin-top: var(--space-lg);">
+                            <button class="btn btn-primary" onclick="copyGradient()">Copy CSS</button>
+                        </div>
+                    </section>
+                </div>
+                <div class="menu-list" style="max-width: 320px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-2">← Back to Tools</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function renderGradient() {
+            const angle = document.getElementById('gradientAngle').value;
+            const colorA = document.getElementById('gradientColorA').value;
+            const colorB = document.getElementById('gradientColorB').value;
+            const value = 'linear-gradient(' + angle + 'deg, ' + colorA + ', ' + colorB + ')';
+            document.getElementById('gradientPreview').style.background = value;
+            document.getElementById('gradientCode').textContent = 'background: ' + value + ';';
+        }
+
+        async function copyGradient() {
+            const value = document.getElementById('gradientCode').textContent;
+            try {
+                await navigator.clipboard.writeText(value);
+            } catch (error) {
+                window.prompt('Copy CSS:', value);
+            }
+        }
+
+        renderGradient();
+    </script>
+</body>
+</html>

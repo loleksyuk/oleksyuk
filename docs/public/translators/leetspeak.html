@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L33t Sp34k | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .leet-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .intensity-selector {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+        }
+        
+        .intensity-btn {
+            padding: var(--space-sm) var(--space-lg);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+        }
+        
+        .intensity-btn.active {
+            background: var(--accent-gradient);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+        
+        .intensity-btn:hover:not(.active) {
+            background: var(--oleksyuk-hover);
+        }
+        
+        .text-area-group {
+            margin-bottom: var(--space-lg);
+        }
+        
+        .text-area-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .text-area {
+            width: 100%;
+            min-height: 120px;
+            padding: var(--space-md);
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            line-height: 1.6;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            resize: vertical;
+            outline: none;
+        }
+        
+        .text-area:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        
+        .text-area.output {
+            background: var(--oleksyuk-card);
+            color: var(--success);
+            font-size: 1.125rem;
+        }
+        
+        .swap-icon {
+            display: flex;
+            justify-content: center;
+            margin: var(--space-md) 0;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+        }
+        
+        .action-row {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .examples-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+        }
+        
+        .examples-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+        }
+        
+        .example-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.875rem;
+        }
+        
+        .example-row:last-child {
+            border-bottom: none;
+        }
+        
+        .example-normal {
+            color: var(--text-muted);
+        }
+        
+        .example-leet {
+            color: var(--success);
+            font-family: 'Space Mono', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk L33t Sp34k
+                    </h1>
+                    <p class="page-subtitle">7r4n5l473 70 l337 5p34k</p>
+                </header>
+                
+                <div class="leet-container">
+                    <div class="intensity-selector animate-fade-in-up stagger-1">
+                        <button class="intensity-btn" data-level="basic" onclick="setLevel('basic')">Basic</button>
+                        <button class="intensity-btn active" data-level="intermediate" onclick="setLevel('intermediate')">Intermediate</button>
+                        <button class="intensity-btn" data-level="advanced" onclick="setLevel('advanced')">Advanced</button>
+                        <button class="intensity-btn" data-level="extreme" onclick="setLevel('extreme')">3X7R3M3</button>
+                    </div>
+                    
+                    <div class="text-area-group animate-fade-in-up stagger-2">
+                        <label class="text-area-label">
+                            <span>✍️</span> Enter Normal Text
+                        </label>
+                        <textarea class="text-area" id="inputText" placeholder="Type your text here..." oninput="translate()"></textarea>
+                    </div>
+                    
+                    <div class="swap-icon animate-fade-in-up stagger-2">↓</div>
+                    
+                    <div class="text-area-group animate-fade-in-up stagger-3">
+                        <label class="text-area-label">
+                            <span>🔤</span> L33t Output
+                        </label>
+                        <textarea class="text-area output" id="outputText" readonly placeholder="L33t will appear here..."></textarea>
+                    </div>
+                    
+                    <div class="action-row animate-fade-in-up stagger-4">
+                        <button class="btn btn-primary" onclick="copyOutput()">📋 Copy</button>
+                        <button class="btn" onclick="randomize()">🎲 Randomize</button>
+                        <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
+                    </div>
+                    
+                    <div class="examples-section animate-fade-in-up stagger-5">
+                        <div class="examples-title">📖 L33t Examples</div>
+                        <div class="example-row">
+                            <span class="example-normal">Elite</span>
+                            <span class="example-leet">3l173</span>
+                        </div>
+                        <div class="example-row">
+                            <span class="example-normal">Hacker</span>
+                            <span class="example-leet">H4CK3R</span>
+                        </div>
+                        <div class="example-row">
+                            <span class="example-normal">Noob</span>
+                            <span class="example-leet">N00B</span>
+                        </div>
+                        <div class="example-row">
+                            <span class="example-normal">Password</span>
+                            <span class="example-leet">P455W0RD</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-6">
+                        ← Back to Translators
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const leetMaps = {
+            basic: {
+                'a': '4', 'e': '3', 'i': '1', 'o': '0', 's': '5', 't': '7'
+            },
+            intermediate: {
+                'a': '4', 'b': '8', 'e': '3', 'g': '6', 'i': '1', 'l': '1',
+                'o': '0', 's': '5', 't': '7', 'z': '2'
+            },
+            advanced: {
+                'a': '4', 'b': '8', 'c': '(', 'd': '|)', 'e': '3', 'f': '|=',
+                'g': '6', 'h': '#', 'i': '1', 'j': '_|', 'k': '|<', 'l': '1',
+                'm': '|\\/|', 'n': '|\\|', 'o': '0', 'p': '|*', 'q': '0,',
+                'r': '|2', 's': '5', 't': '7', 'u': '|_|', 'v': '\\/', 'w': '\\/\\/',
+                'x': '><', 'y': '`/', 'z': '2'
+            },
+            extreme: {
+                'a': '@', 'b': '|3', 'c': '¢', 'd': '|)', 'e': '€', 'f': '|=',
+                'g': '9', 'h': '|-|', 'i': '!', 'j': '_|', 'k': '|<', 'l': '|_',
+                'm': '|\\/|', 'n': '|\\|', 'o': '()', 'p': '|*', 'q': '0,',
+                'r': '|2', 's': '$', 't': '+', 'u': '|_|', 'v': '\\/', 'w': '\\/\\/',
+                'x': '}{', 'y': '¥', 'z': '2'
+            }
+        };
+        
+        let currentLevel = 'intermediate';
+        
+        function setLevel(level) {
+            currentLevel = level;
+            document.querySelectorAll('.intensity-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.level === level);
+            });
+            translate();
+        }
+        
+        function translate() {
+            const input = document.getElementById('inputText').value;
+            const map = leetMaps[currentLevel];
+            
+            const output = input.split('').map(char => {
+                const lower = char.toLowerCase();
+                if (map[lower]) {
+                    // Preserve case roughly
+                    return char === char.toUpperCase() ? map[lower].toUpperCase() : map[lower];
+                }
+                return char;
+            }).join('');
+            
+            document.getElementById('outputText').value = output;
+        }
+        
+        function randomize() {
+            const input = document.getElementById('inputText').value;
+            const map = leetMaps[currentLevel];
+            
+            const output = input.split('').map(char => {
+                const lower = char.toLowerCase();
+                if (map[lower] && Math.random() > 0.3) {
+                    return map[lower];
+                }
+                return char;
+            }).join('');
+            
+            document.getElementById('outputText').value = output;
+        }
+        
+        function copyOutput() {
+            navigator.clipboard.writeText(document.getElementById('outputText').value);
+            event.target.textContent = '✓ Copied!';
+            setTimeout(() => event.target.textContent = '📋 Copy', 2000);
+        }
+        
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('outputText').value = '';
+        }
+    </script>
+</body>
+</html>

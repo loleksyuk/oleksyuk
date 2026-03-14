@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV to JSON | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .tool-shell { max-width: 1120px; margin: 0 auto; }
+        .split-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-lg); }
+        .panel { background: var(--oleksyuk-card); border: 1px solid var(--oleksyuk-border); border-radius: var(--radius-lg); padding: var(--space-lg); }
+        .editor { min-height: 340px; font-family: 'Space Mono', monospace; }
+        @media (max-width: 900px) { .split-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">CSV to JSON</h1>
+                    <p class="page-subtitle">Convert comma-separated rows into JSON objects in the browser.</p>
+                </header>
+                <div class="tool-shell">
+                    <div class="action-row animate-fade-in-up stagger-1" style="justify-content: flex-start; margin-bottom: var(--space-lg);">
+                        <button class="btn btn-primary" onclick="convertCsv()">Convert</button>
+                        <button class="btn btn-ghost" onclick="copyJson()">Copy JSON</button>
+                    </div>
+                    <div class="split-grid">
+                        <section class="panel animate-fade-in-up stagger-2">
+                            <label for="csvInput">CSV</label>
+                            <textarea id="csvInput" class="editor">name,category,status
+oleksyuk,site,active
+Tools,page,expanded</textarea>
+                        </section>
+                        <section class="panel animate-fade-in-up stagger-3">
+                            <label for="csvOutput">JSON</label>
+                            <textarea id="csvOutput" class="editor" readonly></textarea>
+                        </section>
+                    </div>
+                </div>
+                <div class="menu-list" style="max-width: 320px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-4">← Back to Tools</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function parseCsvLine(line) {
+            const values = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let index = 0; index < line.length; index += 1) {
+                const char = line[index];
+                const next = line[index + 1];
+                if (char === '"' && inQuotes && next === '"') {
+                    current += '"';
+                    index += 1;
+                } else if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    values.push(current);
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+
+            values.push(current);
+            return values;
+        }
+
+        function convertCsv() {
+            const lines = document.getElementById('csvInput').value.split(/\r?\n/).filter(Boolean);
+            if (!lines.length) {
+                document.getElementById('csvOutput').value = '';
+                return;
+            }
+            const headers = parseCsvLine(lines[0]).map((value) => value.trim());
+            const rows = lines.slice(1).map((line) => {
+                const cols = parseCsvLine(line);
+                return headers.reduce((acc, header, index) => {
+                    acc[header || 'column_' + index] = cols[index] ?? '';
+                    return acc;
+                }, {});
+            });
+            document.getElementById('csvOutput').value = JSON.stringify(rows, null, 2);
+        }
+
+        async function copyJson() {
+            const value = document.getElementById('csvOutput').value;
+            if (!value) return;
+            try {
+                await navigator.clipboard.writeText(value);
+            } catch (error) {
+                window.prompt('Copy JSON:', value);
+            }
+        }
+
+        convertCsv();
+    </script>
+</body>
+</html>

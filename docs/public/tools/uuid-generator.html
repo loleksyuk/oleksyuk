@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UUID Generator | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .tool-shell { max-width: 840px; margin: 0 auto; }
+        .panel { background: var(--oleksyuk-card); border: 1px solid var(--oleksyuk-border); border-radius: var(--radius-lg); padding: var(--space-lg); }
+        .uuid-list { display: grid; gap: var(--space-sm); margin-top: var(--space-lg); }
+        .uuid-item { padding: var(--space-md); border-radius: var(--radius-md); background: rgba(0, 0, 0, 0.22); border: 1px solid var(--oleksyuk-border); font-family: 'Space Mono', monospace; color: var(--accent-secondary); word-break: break-all; }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">UUID Generator</h1>
+                    <p class="page-subtitle">Generate one or many UUIDs instantly in the browser.</p>
+                </header>
+
+                <div class="tool-shell">
+                    <section class="panel animate-fade-in-up stagger-1">
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="uuidCount">How many</label>
+                                <input id="uuidCount" type="number" min="1" max="50" value="5">
+                            </div>
+                        </div>
+                        <div class="action-row" style="justify-content: flex-start; margin-top: var(--space-lg);">
+                            <button class="btn btn-primary" onclick="generateUuids()">Generate</button>
+                            <button class="btn btn-ghost" onclick="copyAll()">Copy All</button>
+                        </div>
+                        <div id="uuidList" class="uuid-list"></div>
+                    </section>
+                </div>
+
+                <div class="menu-list" style="max-width: 320px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-2">← Back to Tools</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateUuids() {
+            const count = Math.min(50, Math.max(1, Number(document.getElementById('uuidCount').value) || 1));
+            const list = Array.from({ length: count }, () => crypto.randomUUID());
+            document.getElementById('uuidList').innerHTML = list.map((value) => '<div class="uuid-item">' + value + '</div>').join('');
+        }
+
+        async function copyAll() {
+            const values = Array.from(document.querySelectorAll('.uuid-item')).map((el) => el.textContent).join('\n');
+            if (!values) return;
+            try {
+                await navigator.clipboard.writeText(values);
+            } catch (error) {
+                window.prompt('Copy UUIDs:', values);
+            }
+        }
+
+        generateUuids();
+    </script>
+</body>
+</html>

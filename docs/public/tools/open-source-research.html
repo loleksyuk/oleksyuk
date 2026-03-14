@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Hub | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .research-container {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .panel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-xl);
+        }
+
+        .panel {
+            padding: var(--space-xl);
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem;
+            margin-bottom: var(--space-md);
+        }
+
+        .panel-copy {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
+        }
+
+        .input-stack {
+            display: grid;
+            gap: var(--space-md);
+        }
+
+        .launch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: var(--space-sm);
+            margin-top: var(--space-lg);
+        }
+
+        .launch-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 52px;
+            padding: var(--space-md);
+            background: rgba(0, 0, 0, 0.28);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            text-align: center;
+            transition: all var(--transition-fast);
+        }
+
+        .launch-link:hover {
+            background: var(--oleksyuk-hover);
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .preview-box {
+            min-height: 92px;
+            padding: var(--space-md);
+            background: rgba(0, 0, 0, 0.24);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-md);
+            color: var(--accent-secondary);
+            word-break: break-word;
+        }
+
+        .note {
+            margin-top: var(--space-lg);
+            padding: var(--space-md);
+            border: 1px solid rgba(126, 144, 208, 0.2);
+            border-radius: var(--radius-md);
+            background: rgba(126, 144, 208, 0.08);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">oleksyuk Research Hub</h1>
+                    <p class="page-subtitle">Launch public-source searches without rebuilding the same query every time.</p>
+                </header>
+
+                <div class="research-container">
+                    <div class="panel-grid">
+                        <section class="panel animate-fade-in-up stagger-1">
+                            <h2 class="panel-title">Search Setup</h2>
+                            <p class="panel-copy">Use a topic, name, product, or domain. Add a site filter when you want to stay narrow.</p>
+                            <div class="input-stack">
+                                <div class="input-group">
+                                    <label for="topicInput">Topic or target</label>
+                                    <input id="topicInput" type="text" placeholder="Example: oleksyuk browser games" oninput="updateResearchLinks()">
+                                </div>
+                                <div class="input-group">
+                                    <label for="siteInput">Optional site filter</label>
+                                    <input id="siteInput" type="text" placeholder="example.com" oninput="updateResearchLinks()">
+                                </div>
+                                <div class="input-group">
+                                    <label for="phraseInput">Optional exact phrase</label>
+                                    <input id="phraseInput" type="text" placeholder="specific wording to include" oninput="updateResearchLinks()">
+                                </div>
+                            </div>
+                            <div class="note">
+                                This page is for normal public research. Keep your searches lawful, authorized, and respectful of privacy.
+                            </div>
+                        </section>
+
+                        <section class="panel animate-fade-in-up stagger-2">
+                            <h2 class="panel-title">Query Preview</h2>
+                            <p class="panel-copy">This is the base query that will be sent to each source.</p>
+                            <div class="preview-box" id="queryPreview">oleksyuk browser games</div>
+                            <div class="action-row" style="margin-top: var(--space-lg); justify-content: flex-start;">
+                                <button class="btn btn-primary" onclick="copyQuery()">Copy Query</button>
+                                <button class="btn btn-ghost" onclick="resetForm()">Reset</button>
+                            </div>
+                        </section>
+                    </div>
+
+                    <section class="panel animate-fade-in-up stagger-3" style="margin-top: var(--space-lg);">
+                        <h2 class="panel-title">Launch Searches</h2>
+                        <p class="panel-copy">Open the same query across general search, archives, code, discussion, and reference sources.</p>
+                        <div class="launch-grid">
+                            <a class="launch-link" id="googleLink" href="#" target="_blank" rel="noopener noreferrer">Google Web</a>
+                            <a class="launch-link" id="bingLink" href="#" target="_blank" rel="noopener noreferrer">Bing Web</a>
+                            <a class="launch-link" id="duckLink" href="#" target="_blank" rel="noopener noreferrer">DuckDuckGo</a>
+                            <a class="launch-link" id="githubLink" href="#" target="_blank" rel="noopener noreferrer">GitHub Search</a>
+                            <a class="launch-link" id="redditLink" href="#" target="_blank" rel="noopener noreferrer">Reddit Search</a>
+                            <a class="launch-link" id="wikiLink" href="#" target="_blank" rel="noopener noreferrer">Wikipedia Search</a>
+                            <a class="launch-link" id="archiveLink" href="#" target="_blank" rel="noopener noreferrer">Wayback Archive</a>
+                            <a class="launch-link" id="scholarLink" href="#" target="_blank" rel="noopener noreferrer">Google Scholar</a>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="menu-list" style="max-width: 320px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-4">
+                        ← Back to Tools
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function normalizeSite(value) {
+            return value.replace(/^https?:\/\//, '').replace(/\/.*$/, '').trim();
+        }
+
+        function buildQuery() {
+            const topic = document.getElementById('topicInput').value.trim();
+            const site = normalizeSite(document.getElementById('siteInput').value);
+            const phrase = document.getElementById('phraseInput').value.trim();
+            const parts = [];
+
+            if (topic) parts.push(topic);
+            if (phrase) parts.push('"' + phrase + '"');
+            if (site) parts.push('site:' + site);
+
+            return parts.join(' ').trim() || 'oleksyuk browser games';
+        }
+
+        function updateResearchLinks() {
+            const query = buildQuery();
+            const rawSite = normalizeSite(document.getElementById('siteInput').value);
+            const encodedQuery = encodeURIComponent(query);
+            const archiveTarget = rawSite || document.getElementById('topicInput').value.trim() || 'oleksyuk.md';
+
+            document.getElementById('queryPreview').textContent = query;
+            document.getElementById('googleLink').href = 'https://www.google.com/search?q=' + encodedQuery;
+            document.getElementById('bingLink').href = 'https://www.bing.com/search?q=' + encodedQuery;
+            document.getElementById('duckLink').href = 'https://duckduckgo.com/?q=' + encodedQuery;
+            document.getElementById('githubLink').href = 'https://github.com/search?q=' + encodedQuery + '&type=repositories';
+            document.getElementById('redditLink').href = 'https://www.reddit.com/search/?q=' + encodedQuery;
+            document.getElementById('wikiLink').href = 'https://en.wikipedia.org/w/index.php?search=' + encodedQuery;
+            document.getElementById('archiveLink').href = 'https://web.archive.org/web/*/' + encodeURIComponent(archiveTarget);
+            document.getElementById('scholarLink').href = 'https://scholar.google.com/scholar?q=' + encodedQuery;
+        }
+
+        async function copyQuery() {
+            const query = buildQuery();
+            try {
+                await navigator.clipboard.writeText(query);
+            } catch (error) {
+                window.prompt('Copy query:', query);
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('topicInput').value = '';
+            document.getElementById('siteInput').value = '';
+            document.getElementById('phraseInput').value = '';
+            updateResearchLinks();
+        }
+
+        updateResearchLinks();
+    </script>
+</body>
+</html>

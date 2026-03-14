@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .about-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .about-section {
+            margin-bottom: var(--space-2xl);
+        }
+        
+        .about-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            color: var(--accent-secondary);
+            margin-bottom: var(--space-md);
+        }
+        
+        .about-section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: var(--space-md);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+            margin: var(--space-xl) 0;
+        }
+        
+        .feature-item {
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            text-align: center;
+            transition: all var(--transition-normal);
+        }
+        
+        .feature-item:hover {
+            background: var(--oleksyuk-hover);
+            transform: translateY(-4px);
+            border-color: var(--accent-primary);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .feature-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .feature-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-2xl);
+            padding: var(--space-xl);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-lg);
+            margin: var(--space-xl) 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--accent-secondary);
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            justify-content: center;
+        }
+        
+        .tech-tag {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk
+                    </h1>
+                    <p class="page-subtitle">Your all-in-one browser hub</p>
+                </header>
+                
+                <div class="about-container">
+                    <div class="about-section animate-fade-in-up stagger-1">
+                        <h2>What is oleksyuk?</h2>
+                        <p>oleksyuk is a comprehensive web-based platform that brings together games, tools, utilities, and resources all in one place. Everything runs directly in your browser with no downloads required.</p>
+                        <p>Built with a focus on speed, privacy, and user experience, oleksyuk provides a modern, cohesive interface for entertainment and productivity.</p>
+                    </div>
+                    
+                    <div class="stats-row animate-fade-in-up stagger-2">
+                        <div class="stat">
+                            <div class="stat-value">8</div>
+                            <div class="stat-label">Categories</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">40+</div>
+                            <div class="stat-label">Tools & Games</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Ads</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">100%</div>
+                            <div class="stat-label">Free</div>
+                        </div>
+                    </div>
+                    
+                    <div class="about-section animate-fade-in-up stagger-3">
+                        <h2>Features</h2>
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <div class="feature-icon">🎮</div>
+                                <div class="feature-title">Games</div>
+                                <div class="feature-desc">Classic browser games & casino</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">🛠️</div>
+                                <div class="feature-title">Tools</div>
+                                <div class="feature-desc">Generators & utilities</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">⛏️</div>
+                                <div class="feature-title">Minecraft</div>
+                                <div class="feature-desc">EaglerX browser clients</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">🤖</div>
+                                <div class="feature-title">AI Access</div>
+                                <div class="feature-desc">Free AI tool links</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="about-section animate-fade-in-up stagger-4">
+                        <h2>Built With</h2>
+                        <div class="tech-stack">
+                            <span class="tech-tag">HTML5</span>
+                            <span class="tech-tag">CSS3</span>
+                            <span class="tech-tag">JavaScript</span>
+                            <span class="tech-tag">Local Storage</span>
+                            <span class="tech-tag">Web Audio API</span>
+                            <span class="tech-tag">Canvas API</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="../index.html" class="menu-link back-link animate-fade-in-up stagger-5">
+                        ← Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

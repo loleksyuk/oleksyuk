@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speaking Time Calculator | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .calc-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .input-field {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+        
+        .input-field label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .input-field input {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.25rem;
+            text-align: center;
+        }
+        
+        .wpm-presets {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+            margin-top: var(--space-sm);
+        }
+        
+        .preset-btn {
+            padding: var(--space-xs) var(--space-sm);
+            font-size: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--oleksyuk-border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+        
+        .preset-btn:hover {
+            background: var(--oleksyuk-hover);
+            color: var(--text-primary);
+            border-color: var(--accent-primary);
+        }
+        
+        .result-card {
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            text-align: center;
+        }
+        
+        .result-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-md);
+        }
+        
+        .result-time {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--success);
+            margin-bottom: var(--space-md);
+        }
+        
+        .time-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-lg);
+            flex-wrap: wrap;
+        }
+        
+        .time-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--space-md);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius-md);
+            min-width: 80px;
+        }
+        
+        .time-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.75rem;
+            color: var(--accent-secondary);
+        }
+        
+        .time-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .tips-section {
+            margin-top: var(--space-xl);
+            padding: var(--space-lg);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-md);
+        }
+        
+        .tips-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+        }
+        
+        .tips-list {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        
+        .tips-list li {
+            margin-bottom: var(--space-xs);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk Speaking Time
+                    </h1>
+                    <p class="page-subtitle">Calculate how long your speech will take</p>
+                </header>
+                
+                <div class="calc-container">
+                    <div class="input-section animate-fade-in-up stagger-1">
+                        <div class="input-field">
+                            <label for="wordCount">Number of Words</label>
+                            <input type="number" id="wordCount" placeholder="Enter word count" min="1">
+                        </div>
+                        
+                        <div class="input-field">
+                            <label for="wpm">Words Per Minute (WPM)</label>
+                            <input type="number" id="wpm" placeholder="Enter WPM" min="1" value="130">
+                            <div class="wpm-presets">
+                                <button class="preset-btn" onclick="setWPM(100)">Slow (100)</button>
+                                <button class="preset-btn" onclick="setWPM(130)">Normal (130)</button>
+                                <button class="preset-btn" onclick="setWPM(160)">Fast (160)</button>
+                                <button class="preset-btn" onclick="setWPM(200)">Rapid (200)</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons animate-fade-in-up stagger-2" style="display: flex; justify-content: center; margin-bottom: var(--space-xl);">
+                        <button class="btn btn-primary btn-lg" onclick="calculateTime()">Calculate</button>
+                    </div>
+                    
+                    <div class="result-card animate-fade-in-up stagger-3" id="resultCard" style="display: none;">
+                        <div class="result-label">Estimated Speaking Time</div>
+                        <div class="result-time" id="resultTime">0:00</div>
+                        <div class="time-breakdown" id="timeBreakdown">
+                            <div class="time-unit">
+                                <span class="time-value" id="hours">0</span>
+                                <span class="time-label">Hours</span>
+                            </div>
+                            <div class="time-unit">
+                                <span class="time-value" id="minutes">0</span>
+                                <span class="time-label">Minutes</span>
+                            </div>
+                            <div class="time-unit">
+                                <span class="time-value" id="seconds">0</span>
+                                <span class="time-label">Seconds</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tips-section animate-fade-in-up stagger-4">
+                        <div class="tips-title">💡 Speaking Rate Guide</div>
+                        <ul class="tips-list">
+                            <li><strong>100 WPM:</strong> Slow, deliberate pace. Good for complex topics.</li>
+                            <li><strong>130 WPM:</strong> Average conversational speed.</li>
+                            <li><strong>150-160 WPM:</strong> Typical presentation pace.</li>
+                            <li><strong>200+ WPM:</strong> Fast pace. Auctioneers can reach 250+ WPM.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-5">
+                        ← Back to Math
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setWPM(value) {
+            document.getElementById('wpm').value = value;
+        }
+
+        function calculateTime() {
+            const wordCount = parseInt(document.getElementById('wordCount').value);
+            const wpm = parseInt(document.getElementById('wpm').value);
+            const resultCard = document.getElementById('resultCard');
+
+            if (isNaN(wordCount) || isNaN(wpm) || wordCount <= 0 || wpm <= 0) {
+                alert('Please enter valid positive numbers.');
+                return;
+            }
+
+            const totalSeconds = Math.floor((wordCount / wpm) * 60);
+            
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            resultCard.style.display = 'block';
+            
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+            
+            // Format display time
+            let displayTime = '';
+            if (hours > 0) {
+                displayTime = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            } else {
+                displayTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+            document.getElementById('resultTime').textContent = displayTime;
+        }
+
+        // Allow Enter key to calculate
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') calculateTime();
+        });
+    </script>
+</body>
+</html>

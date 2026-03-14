@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Formatter | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .tool-shell { max-width: 1100px; margin: 0 auto; }
+        .split-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-lg); }
+        .panel { background: var(--oleksyuk-card); border: 1px solid var(--oleksyuk-border); border-radius: var(--radius-lg); padding: var(--space-lg); }
+        .panel-title { font-family: 'Orbitron', sans-serif; margin-bottom: var(--space-sm); }
+        .panel-copy { color: var(--text-secondary); font-size: 0.875rem; margin-bottom: var(--space-md); }
+        .editor { min-height: 360px; font-family: var(--vp-font-family-mono, 'Space Mono', monospace); }
+        .status { margin-top: var(--space-md); padding: var(--space-md); border-radius: var(--radius-md); background: rgba(126, 144, 208, 0.08); border: 1px solid rgba(126, 144, 208, 0.18); color: var(--text-secondary); }
+        .mono { font-family: 'Space Mono', monospace; white-space: pre-wrap; word-break: break-word; }
+        @media (max-width: 900px) { .split-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">JSON Formatter</h1>
+                    <p class="page-subtitle">Format, minify, validate, and inspect JSON locally in the browser.</p>
+                </header>
+
+                <div class="tool-shell">
+                    <div class="action-row animate-fade-in-up stagger-1" style="justify-content: flex-start; margin-bottom: var(--space-lg);">
+                        <button class="btn btn-primary" onclick="formatJson()">Format</button>
+                        <button class="btn btn-ghost" onclick="minifyJson()">Minify</button>
+                        <button class="btn btn-ghost" onclick="validateJson()">Validate</button>
+                        <button class="btn btn-ghost" onclick="copyOutput()">Copy Output</button>
+                    </div>
+
+                    <div class="split-grid">
+                        <section class="panel animate-fade-in-up stagger-2">
+                            <div class="panel-title">Input</div>
+                            <div class="panel-copy">Paste JSON here.</div>
+                            <textarea id="jsonInput" class="editor" placeholder='{"name":"oleksyuk","version":1}'></textarea>
+                        </section>
+                        <section class="panel animate-fade-in-up stagger-3">
+                            <div class="panel-title">Output</div>
+                            <div class="panel-copy">Formatted result or validation feedback.</div>
+                            <textarea id="jsonOutput" class="editor" readonly></textarea>
+                        </section>
+                    </div>
+
+                    <div id="jsonStatus" class="status animate-fade-in-up stagger-4">Waiting for input.</div>
+                </div>
+
+                <div class="menu-list" style="max-width: 320px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-5">← Back to Tools</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setStatus(message, ok) {
+            const status = document.getElementById('jsonStatus');
+            status.textContent = message;
+            status.style.borderColor = ok ? 'rgba(110, 231, 183, 0.24)' : 'rgba(251, 113, 133, 0.24)';
+            status.style.background = ok ? 'rgba(110, 231, 183, 0.08)' : 'rgba(251, 113, 133, 0.08)';
+        }
+
+        function parseInput() {
+            return JSON.parse(document.getElementById('jsonInput').value);
+        }
+
+        function formatJson() {
+            try {
+                document.getElementById('jsonOutput').value = JSON.stringify(parseInput(), null, 2);
+                setStatus('Valid JSON. Formatted with 2-space indentation.', true);
+            } catch (error) {
+                document.getElementById('jsonOutput').value = '';
+                setStatus(error.message, false);
+            }
+        }
+
+        function minifyJson() {
+            try {
+                document.getElementById('jsonOutput').value = JSON.stringify(parseInput());
+                setStatus('Valid JSON. Output minified.', true);
+            } catch (error) {
+                document.getElementById('jsonOutput').value = '';
+                setStatus(error.message, false);
+            }
+        }
+
+        function validateJson() {
+            try {
+                const parsed = parseInput();
+                document.getElementById('jsonOutput').value = JSON.stringify(parsed, null, 2);
+                setStatus('Valid JSON.', true);
+            } catch (error) {
+                setStatus(error.message, false);
+            }
+        }
+
+        async function copyOutput() {
+            const value = document.getElementById('jsonOutput').value;
+            if (!value) return;
+            try {
+                await navigator.clipboard.writeText(value);
+                setStatus('Output copied.', true);
+            } catch (error) {
+                window.prompt('Copy output:', value);
+            }
+        }
+    </script>
+</body>
+</html>

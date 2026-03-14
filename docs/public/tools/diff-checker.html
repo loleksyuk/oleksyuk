@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diff Checker | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .tool-shell { max-width: 1120px; margin: 0 auto; }
+        .split-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-lg); }
+        .panel { background: var(--oleksyuk-card); border: 1px solid var(--oleksyuk-border); border-radius: var(--radius-lg); padding: var(--space-lg); }
+        .results { margin-top: var(--space-lg); display: grid; gap: var(--space-sm); }
+        .result-row { padding: var(--space-md); border-radius: var(--radius-md); border: 1px solid var(--oleksyuk-border); background: rgba(0, 0, 0, 0.2); font-family: 'Space Mono', monospace; white-space: pre-wrap; word-break: break-word; }
+        .result-row.same { border-color: rgba(110, 231, 183, 0.2); }
+        .result-row.diff { border-color: rgba(251, 113, 133, 0.2); }
+        .line-label { display: inline-block; min-width: 90px; color: var(--text-muted); }
+        @media (max-width: 900px) { .split-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">Diff Checker</h1>
+                    <p class="page-subtitle">Compare two text blocks and review line-by-line changes.</p>
+                </header>
+                <div class="tool-shell">
+                    <div class="split-grid">
+                        <section class="panel animate-fade-in-up stagger-1">
+                            <label for="diffLeft">Left</label>
+                            <textarea id="diffLeft" class="main-textarea" oninput="compareText()">oleksyuk tools
+Blue theme
+Static pages</textarea>
+                        </section>
+                        <section class="panel animate-fade-in-up stagger-2">
+                            <label for="diffRight">Right</label>
+                            <textarea id="diffRight" class="main-textarea" oninput="compareText()">oleksyuk tools
+Blue theme
+Expanded tools</textarea>
+                        </section>
+                    </div>
+                    <section class="panel animate-fade-in-up stagger-3" style="margin-top: var(--space-lg);">
+                        <div class="panel-title">Comparison</div>
+                        <div id="diffResults" class="results"></div>
+                    </section>
+                </div>
+                <div class="menu-list" style="max-width: 320px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-4">← Back to Tools</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function escapeHtml(value) {
+            return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function compareText() {
+            const left = document.getElementById('diffLeft').value.split('\n');
+            const right = document.getElementById('diffRight').value.split('\n');
+            const max = Math.max(left.length, right.length);
+            const rows = [];
+
+            for (let index = 0; index < max; index += 1) {
+                const leftLine = left[index] ?? '';
+                const rightLine = right[index] ?? '';
+                const same = leftLine === rightLine;
+                rows.push(
+                    '<div class="result-row ' + (same ? 'same' : 'diff') + '">' +
+                    '<div><span class="line-label">Line ' + (index + 1) + ' Left</span>' + escapeHtml(leftLine || ' ') + '</div>' +
+                    '<div><span class="line-label">Line ' + (index + 1) + ' Right</span>' + escapeHtml(rightLine || ' ') + '</div>' +
+                    '</div>'
+                );
+            }
+
+            document.getElementById('diffResults').innerHTML = rows.join('');
+        }
+
+        compareText();
+    </script>
+</body>
+</html>

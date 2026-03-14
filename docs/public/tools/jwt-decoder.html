@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Decoder | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .tool-shell { max-width: 1100px; margin: 0 auto; }
+        .split-grid { display: grid; grid-template-columns: 1fr repeat(2, minmax(0, 1fr)); gap: var(--space-lg); }
+        .panel { background: var(--oleksyuk-card); border: 1px solid var(--oleksyuk-border); border-radius: var(--radius-lg); padding: var(--space-lg); }
+        .viewer { min-height: 320px; font-family: 'Space Mono', monospace; white-space: pre-wrap; word-break: break-word; color: var(--accent-secondary); }
+        @media (max-width: 1000px) { .split-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">JWT Decoder</h1>
+                    <p class="page-subtitle">Decode token headers and payloads locally. This does not verify signatures.</p>
+                </header>
+
+                <div class="tool-shell">
+                    <div class="split-grid">
+                        <section class="panel animate-fade-in-up stagger-1">
+                            <label for="jwtInput">JWT</label>
+                            <textarea id="jwtInput" class="main-textarea" oninput="decodeJwt()" placeholder="Paste a token here"></textarea>
+                        </section>
+                        <section class="panel animate-fade-in-up stagger-2">
+                            <div class="panel-title">Header</div>
+                            <div id="jwtHeader" class="viewer">-</div>
+                        </section>
+                        <section class="panel animate-fade-in-up stagger-3">
+                            <div class="panel-title">Payload</div>
+                            <div id="jwtPayload" class="viewer">-</div>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="menu-list" style="max-width: 320px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-4">← Back to Tools</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function decodePart(value) {
+            const normalized = value.replace(/-/g, '+').replace(/_/g, '/');
+            const padded = normalized + '='.repeat((4 - normalized.length % 4) % 4);
+            return decodeURIComponent(escape(atob(padded)));
+        }
+
+        function decodeJwt() {
+            const raw = document.getElementById('jwtInput').value.trim();
+            const headerEl = document.getElementById('jwtHeader');
+            const payloadEl = document.getElementById('jwtPayload');
+
+            if (!raw) {
+                headerEl.textContent = '-';
+                payloadEl.textContent = '-';
+                return;
+            }
+
+            try {
+                const parts = raw.split('.');
+                if (parts.length < 2) throw new Error('JWT must contain at least header and payload.');
+                headerEl.textContent = JSON.stringify(JSON.parse(decodePart(parts[0])), null, 2);
+                payloadEl.textContent = JSON.stringify(JSON.parse(decodePart(parts[1])), null, 2);
+            } catch (error) {
+                headerEl.textContent = 'Decode error';
+                payloadEl.textContent = error.message;
+            }
+        }
+    </script>
+</body>
+</html>

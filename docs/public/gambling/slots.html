@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slots | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .game-layout {
+            display: grid;
+            grid-template-columns: 1fr 250px;
+            gap: var(--space-lg);
+        }
+        
+        @media (max-width: 900px) {
+            .game-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .game-main {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+        
+        .balance-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+            padding: var(--space-md) var(--space-lg);
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: var(--radius-md);
+        }
+        
+        .balance-amount {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--success);
+        }
+        
+        .balance-amount::before {
+            content: '💰 $';
+        }
+        
+        .bet-controls {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+        
+        .bet-input {
+            width: 150px;
+            padding: var(--space-sm) var(--space-md);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .slot-machine {
+            background: linear-gradient(180deg, #2a1f4e 0%, #1a1230 50%, #0f0a1a 100%);
+            border: 6px solid #5a6da9;
+            border-radius: var(--radius-xl);
+            padding: var(--space-2xl);
+            text-align: center;
+            position: relative;
+            box-shadow: 
+                inset 0 0 50px rgba(0, 0, 0, 0.5),
+                0 10px 40px rgba(0, 0, 0, 0.5),
+                0 0 0 3px #8ea1d8;
+        }
+        
+        .slot-machine::before {
+            content: '🎰 SLOTS 🎰';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(180deg, #aab7e4, #7487c7);
+            color: #0f1319;
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-md);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(126, 144, 208, 0.26);
+        }
+        
+        .reels-container {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            margin: var(--space-xl) 0;
+            padding: var(--space-lg);
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: var(--radius-md);
+            border: 3px solid #333;
+        }
+        
+        .reel {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(180deg, #fff 0%, #e8e8e8 100%);
+            border-radius: var(--radius-md);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            box-shadow: 
+                inset 0 2px 5px rgba(0, 0, 0, 0.2),
+                0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform var(--transition-fast);
+        }
+        
+        .reel.spinning {
+            animation: spinReel 0.15s linear infinite;
+        }
+        
+        @keyframes spinReel {
+            0% { transform: translateY(-5px); }
+            50% { transform: translateY(5px); }
+            100% { transform: translateY(-5px); }
+        }
+        
+        .payouts-table {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: var(--radius-sm);
+            padding: var(--space-md);
+            margin-top: var(--space-md);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .payout-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-xs) 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .payout-row:last-child {
+            border-bottom: none;
+        }
+        
+        .payout-symbols {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .payout-multiplier {
+            color: var(--success);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .result-display {
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .result-display.win {
+            background: rgba(74, 222, 128, 0.2);
+            color: var(--success);
+            border: 2px solid var(--success);
+        }
+        
+        .result-display.lose {
+            background: rgba(248, 113, 113, 0.2);
+            color: var(--danger);
+            border: 2px solid var(--danger);
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+        }
+        
+        .spin-btn {
+            background: linear-gradient(180deg, #8ea1d8, #7487c7);
+            border: none;
+            font-size: 1.25rem;
+            padding: var(--space-lg) var(--space-2xl);
+        }
+        
+        .spin-btn:hover:not(:disabled) {
+            background: linear-gradient(180deg, #aab7e4, #8ea1d8);
+            box-shadow: 0 0 30px rgba(126, 144, 208, 0.32);
+        }
+        
+        /* Leaderboard Sidebar */
+        .leaderboard-panel {
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            height: fit-content;
+        }
+        
+        .leaderboard-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px solid var(--oleksyuk-border);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+        
+        .leaderboard-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-sm);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+        }
+        
+        .leaderboard-entry.top {
+            background: rgba(142, 161, 216, 0.12);
+            border: 1px solid rgba(126, 144, 208, 0.28);
+        }
+        
+        .leaderboard-entry.top .rank {
+            color: var(--accent-secondary);
+        }
+        
+        .rank {
+            font-weight: bold;
+            color: var(--text-secondary);
+        }
+        
+        .player-balance {
+            color: var(--success);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        /* Debt screen */
+        .debt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://0bsidian.s3.us-east-2.amazonaws.com/Images/i-eat-kids.jpg') center/cover;
+            z-index: 10000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="debt-overlay" id="debtOverlay"></div>
+    
+    <div class="page-wrapper">
+        <div class="container" style="max-width: 1100px;">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk Slots
+                    </h1>
+                    <p class="page-subtitle">Spin to win big</p>
+                </header>
+                
+                <div class="game-layout">
+                    <div class="game-main">
+                        <div class="balance-bar animate-fade-in-up stagger-1">
+                            <span class="balance-amount" id="balance">5000</span>
+                            <div class="bet-controls">
+                                <label for="betAmount" style="color: var(--text-secondary);">Bet:</label>
+                                <input type="number" id="betAmount" class="bet-input" placeholder="Amount" min="1">
+                            </div>
+                        </div>
+                        
+                        <div class="slot-machine animate-fade-in-up stagger-2">
+                            <div class="reels-container">
+                                <div class="reel" id="reel1">🍒</div>
+                                <div class="reel" id="reel2">🍒</div>
+                                <div class="reel" id="reel3">🍒</div>
+                            </div>
+                            
+                            <div class="payouts-table">
+                                <div class="payout-row">
+                                    <span class="payout-symbols">💎💎💎</span>
+                                    <span class="payout-multiplier">10x</span>
+                                </div>
+                                <div class="payout-row">
+                                    <span class="payout-symbols">7️⃣7️⃣7️⃣</span>
+                                    <span class="payout-multiplier">7x</span>
+                                </div>
+                                <div class="payout-row">
+                                    <span class="payout-symbols">Any 3 Match</span>
+                                    <span class="payout-multiplier">5x</span>
+                                </div>
+                                <div class="payout-row">
+                                    <span class="payout-symbols">Any 2 Match</span>
+                                    <span class="payout-multiplier">2x</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="result-display hidden" id="result"></div>
+                        
+                        <div class="action-buttons animate-fade-in-up stagger-3">
+                            <button class="btn spin-btn btn-lg" id="spinBtn" onclick="spinReels()">🎰 SPIN</button>
+                        </div>
+                        
+                        <div class="menu-list" style="max-width: 300px; margin: var(--space-lg) auto 0;">
+                            <a href="./index.html" class="menu-link back-link">
+                                ← Back to Casino
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <aside class="leaderboard-panel animate-fade-in-up stagger-4">
+                        <h3 class="leaderboard-title">
+                            <span>🏆</span> Leaderboard
+                        </h3>
+                        <div class="leaderboard-list" id="leaderboardEntries">
+                            <div class="leaderboard-entry">
+                                <span class="rank">#1</span>
+                                <span class="player-balance">Loading...</span>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let balance = 5000;
+        let currentBet = 0;
+        let spinning = false;
+        let playerIP = 'Unknown';
+
+        const symbols = ['🍒', '🔔', '7️⃣', '🍋', '💎', '⭐', '🍀'];
+
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => { playerIP = data.ip; updateLeaderboard(); })
+            .catch(() => { playerIP = 'Unknown'; updateLeaderboard(); });
+
+        window.onload = function() {
+            const savedBalance = localStorage.getItem('slotsBalance');
+            if (savedBalance !== null) {
+                balance = parseFloat(savedBalance);
+                document.getElementById('balance').textContent = formatNumber(balance);
+            }
+            updateLeaderboard();
+        };
+
+        function formatNumber(num) {
+            if (num >= 1e12) return (num / 1e12).toFixed(2) + 'T';
+            if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
+            if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
+            if (num >= 1e3) return (num / 1e3).toFixed(2) + 'K';
+            return num.toLocaleString();
+        }
+
+        function getRandomSymbol() {
+            return symbols[Math.floor(Math.random() * symbols.length)];
+        }
+
+        function checkDebt() {
+            if (balance <= -1000000) {
+                document.getElementById('debtOverlay').style.display = 'block';
+                setTimeout(() => {
+                    localStorage.removeItem('slotsBalance');
+                    localStorage.removeItem('slotsLeaderboard');
+                    window.location.reload();
+                }, 2000);
+                return true;
+            }
+            return false;
+        }
+
+        function updateLeaderboard() {
+            let leaderboard = JSON.parse(localStorage.getItem('slotsLeaderboard')) || [];
+            const playerEntryIndex = leaderboard.findIndex(entry => entry.ip === playerIP);
+            if (playerEntryIndex !== -1) {
+                leaderboard[playerEntryIndex].balance = balance;
+            } else {
+                leaderboard.push({ ip: playerIP, balance: balance });
+            }
+            leaderboard.sort((a, b) => b.balance - a.balance);
+            leaderboard = leaderboard.slice(0, 10);
+            localStorage.setItem('slotsLeaderboard', JSON.stringify(leaderboard));
+
+            const container = document.getElementById('leaderboardEntries');
+            container.innerHTML = '';
+            leaderboard.forEach((entry, index) => {
+                const entryDiv = document.createElement('div');
+                entryDiv.className = `leaderboard-entry ${index === 0 ? 'top' : ''}`;
+                entryDiv.innerHTML = `
+                    <span class="rank">#${index + 1}</span>
+                    <span class="player-balance">$${formatNumber(entry.balance)}</span>
+                `;
+                container.appendChild(entryDiv);
+            });
+        }
+
+        function spinReels() {
+            if (spinning) return;
+
+            const betAmount = parseFloat(document.getElementById('betAmount').value);
+            if (isNaN(betAmount) || betAmount <= 0) {
+                alert('Please enter a valid bet amount greater than 0.');
+                return;
+            }
+
+            currentBet = betAmount;
+            balance -= currentBet;
+            document.getElementById('balance').textContent = formatNumber(balance);
+            saveGameState();
+            if (checkDebt()) return;
+
+            spinning = true;
+            document.getElementById('spinBtn').disabled = true;
+            document.getElementById('result').classList.add('hidden');
+
+            const reels = document.querySelectorAll('.reel');
+            reels.forEach(reel => reel.classList.add('spinning'));
+
+            // Animate random symbols during spin
+            const spinInterval = setInterval(() => {
+                reels.forEach(reel => {
+                    reel.textContent = getRandomSymbol();
+                });
+            }, 100);
+
+            setTimeout(() => {
+                clearInterval(spinInterval);
+                reels.forEach(reel => reel.classList.remove('spinning'));
+
+                const reel1 = getRandomSymbol();
+                const reel2 = getRandomSymbol();
+                const reel3 = getRandomSymbol();
+
+                document.getElementById('reel1').textContent = reel1;
+                document.getElementById('reel2').textContent = reel2;
+                document.getElementById('reel3').textContent = reel3;
+
+                let payoutMultiplier = 0;
+                let message = '';
+                let resultType = 'lose';
+
+                if (reel1 === reel2 && reel2 === reel3) {
+                    if (reel1 === '💎') {
+                        payoutMultiplier = 10;
+                        message = `💎 DIAMOND JACKPOT! You win $${formatNumber(currentBet * payoutMultiplier)}!`;
+                    } else if (reel1 === '7️⃣') {
+                        payoutMultiplier = 7;
+                        message = `🎉 LUCKY SEVENS! You win $${formatNumber(currentBet * payoutMultiplier)}!`;
+                    } else {
+                        payoutMultiplier = 5;
+                        message = `🎊 Three of a kind! You win $${formatNumber(currentBet * payoutMultiplier)}!`;
+                    }
+                    resultType = 'win';
+                } else if (reel1 === reel2 || reel2 === reel3 || reel1 === reel3) {
+                    payoutMultiplier = 2;
+                    message = `Two of a kind! You win $${formatNumber(currentBet * payoutMultiplier)}!`;
+                    resultType = 'win';
+                } else {
+                    message = 'No match. Better luck next time!';
+                }
+
+                if (payoutMultiplier > 0) {
+                    balance += currentBet * payoutMultiplier;
+                }
+
+                const resultEl = document.getElementById('result');
+                resultEl.textContent = message;
+                resultEl.className = `result-display ${resultType}`;
+                resultEl.classList.remove('hidden');
+
+                document.getElementById('balance').textContent = formatNumber(balance);
+                spinning = false;
+                document.getElementById('spinBtn').disabled = false;
+                saveGameState();
+                checkDebt();
+            }, 2000);
+        }
+
+        function saveGameState() {
+            localStorage.setItem('slotsBalance', balance);
+            updateLeaderboard();
+        }
+    </script>
+</body>
+</html>

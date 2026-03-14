@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lorem Generator | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .tool-shell { max-width: 900px; margin: 0 auto; }
+        .panel { background: var(--oleksyuk-card); border: 1px solid var(--oleksyuk-border); border-radius: var(--radius-lg); padding: var(--space-lg); }
+        .output { min-height: 260px; font-family: 'Space Mono', monospace; white-space: pre-wrap; color: var(--text-primary); }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">Lorem Generator</h1>
+                    <p class="page-subtitle">Generate placeholder copy for layouts, cards, and test content.</p>
+                </header>
+
+                <div class="tool-shell">
+                    <section class="panel animate-fade-in-up stagger-1">
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="loremType">Type</label>
+                                <select id="loremType">
+                                    <option value="paragraphs">Paragraphs</option>
+                                    <option value="sentences">Sentences</option>
+                                    <option value="words">Words</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="loremCount">Count</label>
+                                <input id="loremCount" type="number" min="1" max="20" value="3">
+                            </div>
+                        </div>
+                        <div class="action-row" style="justify-content: flex-start; margin-top: var(--space-lg);">
+                            <button class="btn btn-primary" onclick="generateLorem()">Generate</button>
+                            <button class="btn btn-ghost" onclick="copyLorem()">Copy</button>
+                        </div>
+                        <div id="loremOutput" class="output" style="margin-top: var(--space-lg);"></div>
+                    </section>
+                </div>
+
+                <div class="menu-list" style="max-width: 320px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-2">← Back to Tools</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const words = ['oleksyuk', 'browser', 'utility', 'interface', 'layout', 'module', 'system', 'workspace', 'signal', 'structure', 'design', 'direct', 'native', 'search', 'builder', 'format', 'render', 'panel', 'layer', 'control'];
+
+        function pickWord(index) {
+            return words[index % words.length];
+        }
+
+        function generateSentence(seed) {
+            const count = 8 + (seed % 7);
+            const sentence = Array.from({ length: count }, (_, index) => pickWord(seed + index)).join(' ');
+            return sentence.charAt(0).toUpperCase() + sentence.slice(1) + '.';
+        }
+
+        function generateLorem() {
+            const type = document.getElementById('loremType').value;
+            const count = Math.min(20, Math.max(1, Number(document.getElementById('loremCount').value) || 1));
+            let output = '';
+
+            if (type === 'words') {
+                output = Array.from({ length: count * 12 }, (_, index) => pickWord(index)).join(' ');
+            } else if (type === 'sentences') {
+                output = Array.from({ length: count * 4 }, (_, index) => generateSentence(index)).join(' ');
+            } else {
+                output = Array.from({ length: count }, (_, index) => {
+                    return Array.from({ length: 4 }, (_, inner) => generateSentence(index * 4 + inner)).join(' ');
+                }).join('\n\n');
+            }
+
+            document.getElementById('loremOutput').textContent = output;
+        }
+
+        async function copyLorem() {
+            const value = document.getElementById('loremOutput').textContent;
+            if (!value) return;
+            try {
+                await navigator.clipboard.writeText(value);
+            } catch (error) {
+                window.prompt('Copy text:', value);
+            }
+        }
+
+        generateLorem();
+    </script>
+</body>
+</html>

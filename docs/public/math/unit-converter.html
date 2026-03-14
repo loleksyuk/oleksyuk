@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Converter | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .converter-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .category-selector {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+        }
+        
+        .cat-btn {
+            padding: var(--space-sm) var(--space-md);
+            font-size: 0.75rem;
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+        
+        .cat-btn.active {
+            background: var(--accent-gradient);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+        
+        .cat-btn:hover:not(.active) {
+            background: var(--oleksyuk-hover);
+        }
+        
+        .converter-panel {
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .converter-row {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .converter-input-group {
+            flex: 1;
+        }
+        
+        .converter-input-group label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .converter-input-group input {
+            width: 100%;
+            font-family: 'Space Mono', monospace;
+            font-size: 1.25rem;
+        }
+        
+        .converter-input-group select {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.875rem;
+            margin-top: var(--space-sm);
+        }
+        
+        .swap-btn {
+            padding: var(--space-sm);
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: 50%;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.25rem;
+            transition: all var(--transition-fast);
+            flex-shrink: 0;
+        }
+        
+        .swap-btn:hover {
+            background: var(--oleksyuk-hover);
+            color: var(--accent-primary);
+            transform: rotate(180deg);
+        }
+        
+        .result-display {
+            text-align: center;
+            padding: var(--space-lg);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius-md);
+        }
+        
+        .result-display .from {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .result-display .equals {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .result-display .to {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.75rem;
+            color: var(--success);
+        }
+        
+        .common-conversions {
+            margin-top: var(--space-xl);
+        }
+        
+        .common-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+        }
+        
+        .common-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: var(--space-sm);
+        }
+        
+        .common-item {
+            padding: var(--space-md);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+        }
+        
+        .common-item .conversion {
+            color: var(--accent-secondary);
+            font-family: 'Space Mono', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk Unit Converter
+                    </h1>
+                    <p class="page-subtitle">Convert between different units</p>
+                </header>
+                
+                <div class="converter-container">
+                    <div class="category-selector animate-fade-in-up stagger-1">
+                        <button class="cat-btn active" data-cat="length" onclick="setCategory('length')">📏 Length</button>
+                        <button class="cat-btn" data-cat="weight" onclick="setCategory('weight')">⚖️ Weight</button>
+                        <button class="cat-btn" data-cat="temp" onclick="setCategory('temp')">🌡️ Temp</button>
+                        <button class="cat-btn" data-cat="time" onclick="setCategory('time')">⏱️ Time</button>
+                        <button class="cat-btn" data-cat="data" onclick="setCategory('data')">💾 Data</button>
+                    </div>
+                    
+                    <div class="converter-panel animate-fade-in-up stagger-2">
+                        <div class="converter-row">
+                            <div class="converter-input-group">
+                                <label>From</label>
+                                <input type="number" id="fromValue" placeholder="Enter value" oninput="convert()">
+                                <select id="fromUnit" onchange="convert()"></select>
+                            </div>
+                            
+                            <button class="swap-btn" onclick="swapUnits()">⇄</button>
+                            
+                            <div class="converter-input-group">
+                                <label>To</label>
+                                <input type="number" id="toValue" readonly>
+                                <select id="toUnit" onchange="convert()"></select>
+                            </div>
+                        </div>
+                        
+                        <div class="result-display" id="resultDisplay">
+                            <div class="from" id="resultFrom">-</div>
+                            <div class="equals">=</div>
+                            <div class="to" id="resultTo">-</div>
+                        </div>
+                    </div>
+                    
+                    <div class="common-conversions animate-fade-in-up stagger-3">
+                        <div class="common-title">📌 Common Conversions</div>
+                        <div class="common-grid" id="commonGrid"></div>
+                    </div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-4">
+                        ← Back to Math
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const units = {
+            length: {
+                units: ['mm', 'cm', 'm', 'km', 'in', 'ft', 'yd', 'mi'],
+                labels: ['Millimeter', 'Centimeter', 'Meter', 'Kilometer', 'Inch', 'Foot', 'Yard', 'Mile'],
+                toBase: [0.001, 0.01, 1, 1000, 0.0254, 0.3048, 0.9144, 1609.344],
+                common: ['1 in = 2.54 cm', '1 ft = 30.48 cm', '1 mi = 1.609 km', '1 m = 3.28 ft']
+            },
+            weight: {
+                units: ['mg', 'g', 'kg', 'oz', 'lb', 'ton'],
+                labels: ['Milligram', 'Gram', 'Kilogram', 'Ounce', 'Pound', 'Ton'],
+                toBase: [0.001, 1, 1000, 28.3495, 453.592, 907185],
+                common: ['1 kg = 2.205 lb', '1 lb = 453.6 g', '1 oz = 28.35 g', '1 ton = 2000 lb']
+            },
+            temp: {
+                units: ['C', 'F', 'K'],
+                labels: ['Celsius', 'Fahrenheit', 'Kelvin'],
+                common: ['0°C = 32°F', '100°C = 212°F', '0 K = -273.15°C']
+            },
+            time: {
+                units: ['ms', 's', 'min', 'hr', 'day', 'week', 'year'],
+                labels: ['Millisecond', 'Second', 'Minute', 'Hour', 'Day', 'Week', 'Year'],
+                toBase: [0.001, 1, 60, 3600, 86400, 604800, 31536000],
+                common: ['1 hr = 3600 s', '1 day = 24 hr', '1 week = 7 days', '1 year = 365 days']
+            },
+            data: {
+                units: ['B', 'KB', 'MB', 'GB', 'TB'],
+                labels: ['Bytes', 'Kilobytes', 'Megabytes', 'Gigabytes', 'Terabytes'],
+                toBase: [1, 1024, 1048576, 1073741824, 1099511627776],
+                common: ['1 KB = 1024 B', '1 MB = 1024 KB', '1 GB = 1024 MB', '1 TB = 1024 GB']
+            }
+        };
+        
+        let currentCategory = 'length';
+        
+        function setCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.cat === cat);
+            });
+            populateUnits();
+            convert();
+            showCommonConversions();
+        }
+        
+        function populateUnits() {
+            const data = units[currentCategory];
+            const fromSelect = document.getElementById('fromUnit');
+            const toSelect = document.getElementById('toUnit');
+            
+            const options = data.units.map((unit, i) => 
+                `<option value="${unit}">${data.labels[i]} (${unit})</option>`
+            ).join('');
+            
+            fromSelect.innerHTML = options;
+            toSelect.innerHTML = options;
+            toSelect.selectedIndex = 1;
+        }
+        
+        function convert() {
+            const fromValue = parseFloat(document.getElementById('fromValue').value);
+            const fromUnit = document.getElementById('fromUnit').value;
+            const toUnit = document.getElementById('toUnit').value;
+            
+            if (isNaN(fromValue)) {
+                document.getElementById('toValue').value = '';
+                document.getElementById('resultFrom').textContent = '-';
+                document.getElementById('resultTo').textContent = '-';
+                return;
+            }
+            
+            let result;
+            
+            if (currentCategory === 'temp') {
+                result = convertTemperature(fromValue, fromUnit, toUnit);
+            } else {
+                const data = units[currentCategory];
+                const fromIndex = data.units.indexOf(fromUnit);
+                const toIndex = data.units.indexOf(toUnit);
+                const baseValue = fromValue * data.toBase[fromIndex];
+                result = baseValue / data.toBase[toIndex];
+            }
+            
+            const formatted = result.toPrecision(6).replace(/\.?0+$/, '');
+            document.getElementById('toValue').value = formatted;
+            document.getElementById('resultFrom').textContent = `${fromValue} ${fromUnit}`;
+            document.getElementById('resultTo').textContent = `${formatted} ${toUnit}`;
+        }
+        
+        function convertTemperature(value, from, to) {
+            let celsius;
+            if (from === 'C') celsius = value;
+            else if (from === 'F') celsius = (value - 32) * 5/9;
+            else if (from === 'K') celsius = value - 273.15;
+            
+            if (to === 'C') return celsius;
+            if (to === 'F') return celsius * 9/5 + 32;
+            if (to === 'K') return celsius + 273.15;
+        }
+        
+        function swapUnits() {
+            const fromSelect = document.getElementById('fromUnit');
+            const toSelect = document.getElementById('toUnit');
+            const temp = fromSelect.value;
+            fromSelect.value = toSelect.value;
+            toSelect.value = temp;
+            convert();
+        }
+        
+        function showCommonConversions() {
+            const data = units[currentCategory];
+            const grid = document.getElementById('commonGrid');
+            grid.innerHTML = data.common.map(conv => 
+                `<div class="common-item"><span class="conversion">${conv}</span></div>`
+            ).join('');
+        }
+        
+        // Initialize
+        populateUnits();
+        showCommonConversions();
+    </script>
+</body>
+</html>

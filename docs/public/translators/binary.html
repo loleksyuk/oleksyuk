@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Converter | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .binary-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .mode-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .mode-btn {
+            padding: var(--space-md) var(--space-xl);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.875rem;
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .mode-btn:first-child {
+            border-radius: var(--radius-md) 0 0 var(--radius-md);
+            border-right: none;
+        }
+        
+        .mode-btn:last-child {
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+        
+        .mode-btn.active {
+            background: var(--accent-gradient);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+        
+        .text-area-group {
+            margin-bottom: var(--space-lg);
+        }
+        
+        .text-area-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .text-area {
+            width: 100%;
+            min-height: 120px;
+            padding: var(--space-md);
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            line-height: 1.6;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            resize: vertical;
+            outline: none;
+        }
+        
+        .text-area:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        
+        .text-area.output {
+            background: var(--oleksyuk-card);
+            color: var(--success);
+            font-size: 1rem;
+            word-break: break-all;
+        }
+        
+        .swap-icon {
+            display: flex;
+            justify-content: center;
+            margin: var(--space-md) 0;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+        }
+        
+        .action-row {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-xl);
+            padding: var(--space-md);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-md);
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            color: var(--accent-secondary);
+        }
+        
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        
+        .format-options {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .format-btn {
+            padding: var(--space-xs) var(--space-md);
+            font-size: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--oleksyuk-border);
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .format-btn.active {
+            background: var(--oleksyuk-hover);
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk Binary
+                    </h1>
+                    <p class="page-subtitle">Convert text to binary and back</p>
+                </header>
+                
+                <div class="binary-container">
+                    <div class="mode-toggle animate-fade-in-up stagger-1">
+                        <button class="mode-btn active" id="modeText" onclick="setMode(true)">
+                            Text → Binary
+                        </button>
+                        <button class="mode-btn" id="modeBinary" onclick="setMode(false)">
+                            Binary → Text
+                        </button>
+                    </div>
+                    
+                    <div class="format-options animate-fade-in-up stagger-1">
+                        <button class="format-btn active" data-format="space" onclick="setFormat('space')">Spaced</button>
+                        <button class="format-btn" data-format="none" onclick="setFormat('none')">No Spaces</button>
+                    </div>
+                    
+                    <div class="text-area-group animate-fade-in-up stagger-2">
+                        <label class="text-area-label" id="inputLabel">
+                            <span>✍️</span> Enter Text
+                        </label>
+                        <textarea class="text-area" id="inputText" placeholder="Type your text here..." oninput="translate()"></textarea>
+                    </div>
+                    
+                    <div class="swap-icon animate-fade-in-up stagger-2">↓</div>
+                    
+                    <div class="text-area-group animate-fade-in-up stagger-3">
+                        <label class="text-area-label" id="outputLabel">
+                            <span>💻</span> Binary Output
+                        </label>
+                        <textarea class="text-area output" id="outputText" readonly placeholder="Binary will appear here..."></textarea>
+                    </div>
+                    
+                    <div class="action-row animate-fade-in-up stagger-4">
+                        <button class="btn btn-primary" onclick="copyOutput()">📋 Copy</button>
+                        <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
+                    </div>
+                    
+                    <div class="stats-bar animate-fade-in-up stagger-5">
+                        <div class="stat">
+                            <div class="stat-value" id="charCount">0</div>
+                            <div class="stat-label">Characters</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="bitCount">0</div>
+                            <div class="stat-label">Bits</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="byteCount">0</div>
+                            <div class="stat-label">Bytes</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-6">
+                        ← Back to Translators
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isTextToBinary = true;
+        let format = 'space';
+        
+        function setMode(textToBinary) {
+            isTextToBinary = textToBinary;
+            document.getElementById('modeText').classList.toggle('active', textToBinary);
+            document.getElementById('modeBinary').classList.toggle('active', !textToBinary);
+            
+            if (textToBinary) {
+                document.getElementById('inputLabel').innerHTML = '<span>✍️</span> Enter Text';
+                document.getElementById('outputLabel').innerHTML = '<span>💻</span> Binary Output';
+                document.getElementById('inputText').placeholder = 'Type your text here...';
+            } else {
+                document.getElementById('inputLabel').innerHTML = '<span>💻</span> Enter Binary';
+                document.getElementById('outputLabel').innerHTML = '<span>✍️</span> Decoded Text';
+                document.getElementById('inputText').placeholder = 'Enter binary (8 bits per character)...';
+            }
+            translate();
+        }
+        
+        function setFormat(fmt) {
+            format = fmt;
+            document.querySelectorAll('.format-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.format === fmt);
+            });
+            translate();
+        }
+        
+        function translate() {
+            const input = document.getElementById('inputText').value;
+            let output = '';
+            
+            if (isTextToBinary) {
+                const binary = input.split('').map(char => 
+                    char.charCodeAt(0).toString(2).padStart(8, '0')
+                );
+                output = format === 'space' ? binary.join(' ') : binary.join('');
+                
+                document.getElementById('charCount').textContent = input.length;
+                document.getElementById('bitCount').textContent = input.length * 8;
+                document.getElementById('byteCount').textContent = input.length;
+            } else {
+                // Remove spaces and split into 8-bit chunks
+                const cleanBinary = input.replace(/\s/g, '');
+                const chunks = cleanBinary.match(/.{1,8}/g) || [];
+                output = chunks.map(chunk => {
+                    const charCode = parseInt(chunk, 2);
+                    return isNaN(charCode) ? '' : String.fromCharCode(charCode);
+                }).join('');
+                
+                document.getElementById('charCount').textContent = output.length;
+                document.getElementById('bitCount').textContent = cleanBinary.length;
+                document.getElementById('byteCount').textContent = Math.ceil(cleanBinary.length / 8);
+            }
+            
+            document.getElementById('outputText').value = output;
+        }
+        
+        function copyOutput() {
+            navigator.clipboard.writeText(document.getElementById('outputText').value);
+            event.target.textContent = '✓ Copied!';
+            setTimeout(() => event.target.textContent = '📋 Copy', 2000);
+        }
+        
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('outputText').value = '';
+            document.getElementById('charCount').textContent = '0';
+            document.getElementById('bitCount').textContent = '0';
+            document.getElementById('byteCount').textContent = '0';
+        }
+    </script>
+</body>
+</html>

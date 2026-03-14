@@ -1,0 +1,17 @@
+{
+  "name": "oleksyuk",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs && rm -f docs/.vitepress/dist/404.html",
+    "preview": "vitepress preview docs",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs && rm -f docs/.vitepress/dist/404.html",
+    "docs:preview": "vitepress preview docs",
+    "clean": "rm -rf docs/.vitepress/cache docs/.vitepress/dist"
+  },
+  "devDependencies": {
+    "vitepress": "^2.0.0-alpha.16"
+  }
+}

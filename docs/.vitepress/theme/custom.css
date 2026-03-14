@@ -1,0 +1,420 @@
+:root {
+  --vp-font-family-base: 'Space Mono', 'JetBrains Mono', 'Fira Code', monospace;
+  --vp-font-family-mono: 'Space Mono', 'JetBrains Mono', 'Fira Code', monospace;
+  --vp-home-hero-name-color: transparent;
+  --obs-accent-1: #8ea1d8;
+  --obs-accent-2: #7487c7;
+  --obs-accent-3: #aab7e4;
+  --obs-accent-rgb: 126, 144, 208;
+  --obs-accent-faint-rgb: 162, 178, 214;
+  --obs-accent-deep-rgb: 82, 94, 126;
+  --obs-border-rgb: 139, 151, 173;
+  --obs-text-1: #eef2ff;
+  --obs-text-2: #aeb7ca;
+  --obs-text-3: #788093;
+  --obs-bg-1: #090b10;
+  --obs-bg-2: #0f1319;
+  --obs-bg-soft: rgba(18, 22, 31, 0.9);
+  --obs-bg-elv: rgba(24, 28, 38, 0.96);
+  --obs-card-top: rgba(20, 24, 33, 0.92);
+  --obs-card-bottom: rgba(13, 16, 23, 0.96);
+  --obs-card-edge: rgba(var(--obs-border-rgb), 0.18);
+  --obs-card-hover: rgba(var(--obs-border-rgb), 0.36);
+  --obs-icon-color: #9eb0df;
+  --vp-home-hero-image-background-image: radial-gradient(circle at center, rgba(var(--obs-accent-rgb), 0.22), rgba(var(--obs-accent-rgb), 0));
+  --vp-home-hero-image-filter: drop-shadow(0 0 44px rgba(var(--obs-accent-rgb), 0.22));
+  --vp-c-brand-1: var(--obs-accent-1);
+  --vp-c-brand-2: var(--obs-accent-2);
+  --vp-c-brand-3: var(--obs-accent-3);
+  --vp-c-brand-soft: rgba(var(--obs-accent-rgb), 0.16);
+  --vp-c-bg: var(--obs-bg-1);
+  --vp-c-bg-alt: var(--obs-bg-2);
+  --vp-c-bg-soft: var(--obs-bg-soft);
+  --vp-c-bg-elv: var(--obs-bg-elv);
+  --vp-c-border: rgba(var(--obs-border-rgb), 0.18);
+  --vp-c-divider: rgba(var(--obs-border-rgb), 0.12);
+  --vp-c-text-1: var(--obs-text-1);
+  --vp-c-text-2: var(--obs-text-2);
+  --vp-c-text-3: var(--obs-text-3);
+  --vp-layout-max-width: 1280px;
+}
+
+html,
+body,
+.Layout {
+  background-color: var(--obs-bg-1);
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(var(--obs-accent-rgb), 0.18), transparent 30%),
+    radial-gradient(circle at 80% 16%, rgba(var(--obs-accent-faint-rgb), 0.08), transparent 24%),
+    radial-gradient(circle at 68% 80%, rgba(var(--obs-accent-deep-rgb), 0.16), transparent 24%),
+    linear-gradient(145deg, rgba(12, 15, 21, 0.98), rgba(7, 9, 13, 1));
+  color: var(--obs-text-1);
+}
+
+body {
+  font-family: var(--vp-font-family-base);
+}
+
+h1,
+h2,
+h3,
+h4,
+.VPHero .name,
+.VPHero .text,
+.VPNavBarTitle .title,
+.VPFeature .title {
+  font-family: 'Orbitron', 'Space Mono', sans-serif;
+}
+
+.VPNav {
+  background: rgba(9, 11, 16, 0.76);
+}
+
+.VPNavBar {
+  background: rgba(9, 11, 16, 0.62);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(var(--obs-border-rgb), 0.12);
+}
+
+.VPNavBar.has-sidebar .content-body,
+.VPNavBar .content-body {
+  background: transparent;
+}
+
+.VPNavBarTitle .title {
+  letter-spacing: 0.04em;
+}
+
+.VPHero {
+  padding-top: 48px;
+}
+
+.VPHero .name {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--obs-text-1) 88%, white 12%) 0%, color-mix(in srgb, var(--obs-accent-3) 72%, white 28%) 46%, var(--obs-accent-1) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.VPHero .text {
+  color: var(--obs-text-1);
+}
+
+.VPHero .tagline {
+  color: var(--obs-text-2);
+  max-width: 690px;
+}
+
+.VPHero .image-src {
+  border-radius: 28px;
+}
+
+.VPButton.brand {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--obs-accent-1), var(--obs-accent-2));
+  box-shadow: 0 0 28px rgba(var(--obs-accent-rgb), 0.18);
+}
+
+.VPButton.brand:hover {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--obs-accent-1) 86%, white 14%), color-mix(in srgb, var(--obs-accent-2) 88%, white 12%));
+}
+
+.VPButton.alt {
+  border-color: rgba(var(--obs-border-rgb), 0.18);
+  background: rgba(18, 22, 31, 0.84);
+}
+
+.vp-doc .obsidian-intro {
+  max-width: 640px;
+  margin: 0 auto 2rem;
+  color: var(--obs-text-2);
+  text-align: center;
+  font-size: 1.02rem;
+}
+
+.vp-doc .obsidian-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 0;
+}
+
+.vp-doc .obsidian-grid + .obsidian-section {
+  margin-top: 2rem;
+}
+
+.vp-doc .obsidian-menu-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.vp-doc .obsidian-onboarding {
+  margin: 0 auto 1.35rem;
+  padding: 1.15rem;
+  border: 1px solid var(--obs-card-edge);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(var(--obs-accent-rgb), 0.16), transparent 38%),
+    linear-gradient(180deg, rgba(18, 22, 31, 0.94), rgba(12, 15, 22, 0.98));
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.24);
+}
+
+.vp-doc .obsidian-onboarding-full {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - 180px);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.vp-doc .obsidian-onboarding-copy h2 {
+  margin: 0 0 0.45rem;
+  font-family: 'Orbitron', 'Space Mono', sans-serif;
+  font-size: clamp(1.45rem, 3vw, 2.4rem);
+  line-height: 1.1;
+}
+
+.vp-doc .obsidian-onboarding-copy p {
+  margin: 0;
+  max-width: 60ch;
+  color: var(--obs-text-2);
+  font-size: 1rem;
+}
+
+.vp-doc .obsidian-onboarding-kicker {
+  margin-bottom: 0.5rem;
+  color: var(--obs-accent-3);
+  font-size: 0.76rem;
+  font-family: 'Orbitron', 'Space Mono', sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.vp-doc .obsidian-onboarding-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.vp-doc .obsidian-step {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid rgba(var(--obs-border-rgb), 0.12);
+  border-radius: 16px;
+  background: rgba(10, 13, 18, 0.48);
+}
+
+.vp-doc .obsidian-step-number {
+  color: var(--obs-accent-3);
+  font-family: 'Orbitron', 'Space Mono', sans-serif;
+  font-size: 0.8rem;
+}
+
+.vp-doc .obsidian-step-text {
+  color: var(--obs-text-1);
+  font-size: 0.92rem;
+}
+
+.vp-doc .obsidian-quick-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.vp-doc .obsidian-quick-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(var(--obs-border-rgb), 0.16);
+  border-radius: 999px;
+  background: rgba(16, 20, 28, 0.84);
+  color: var(--obs-text-1);
+  text-decoration: none;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.vp-doc .obsidian-quick-link-brand {
+  background: linear-gradient(135deg, rgba(var(--obs-accent-rgb), 0.2), rgba(var(--obs-accent-faint-rgb), 0.12));
+  border-color: rgba(var(--obs-border-rgb), 0.28);
+}
+
+.vp-doc .obsidian-quick-link:hover {
+  transform: translateY(-2px);
+  border-color: rgba(var(--obs-border-rgb), 0.3);
+  background: rgba(22, 27, 38, 0.96);
+}
+
+.vp-doc .obsidian-onboarding-foot {
+  margin-top: 1.1rem;
+  color: var(--obs-text-3);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.vp-doc .obsidian-menu-section {
+  padding: 1rem;
+  border: 1px solid var(--obs-card-edge);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(20, 24, 33, 0.78), rgba(12, 15, 22, 0.92));
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
+}
+
+.vp-doc .obsidian-menu-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid rgba(var(--obs-border-rgb), 0.12);
+  font-family: 'Orbitron', 'Space Mono', sans-serif;
+  font-size: 0.95rem;
+}
+
+.vp-doc .obsidian-menu-list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.vp-doc .obsidian-menu-link {
+  display: block;
+  padding: 0.78rem 0.95rem;
+  border: 1px solid rgba(var(--obs-border-rgb), 0.14);
+  border-radius: 14px;
+  background: rgba(15, 19, 27, 0.82);
+  color: var(--obs-text-1);
+  text-decoration: none;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.vp-doc .obsidian-menu-link:hover {
+  transform: translateX(6px);
+  border-color: rgba(var(--obs-border-rgb), 0.32);
+  background: rgba(20, 25, 35, 0.96);
+  box-shadow: 0 0 22px rgba(var(--obs-accent-rgb), 0.1);
+}
+
+.vp-doc .obsidian-grid-wide {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.vp-doc .obsidian-section {
+  max-width: 720px;
+  margin: 0 auto 1rem;
+  text-align: center;
+}
+
+.vp-doc .obsidian-section-title {
+  margin-bottom: 0.45rem;
+  font-family: 'Orbitron', 'Space Mono', sans-serif;
+  font-size: 0.92rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--obs-accent-3);
+}
+
+.vp-doc .obsidian-section-copy {
+  margin: 0;
+  color: var(--obs-text-3);
+  font-size: 0.92rem;
+}
+
+.vp-doc .obsidian-card {
+  position: relative;
+  display: block;
+  min-height: 180px;
+  padding: 1.4rem;
+  border: 1px solid var(--obs-card-edge);
+  border-radius: 20px;
+  background: linear-gradient(180deg, var(--obs-card-top), var(--obs-card-bottom));
+  color: var(--obs-text-1);
+  text-decoration: none;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  overflow: hidden;
+}
+
+.vp-doc .obsidian-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(var(--obs-accent-rgb), 0.16), transparent 50%);
+  pointer-events: none;
+}
+
+.vp-doc .obsidian-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--obs-card-hover);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28), 0 0 28px rgba(var(--obs-accent-rgb), 0.12);
+}
+
+.vp-doc .obsidian-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+  font-family: 'Orbitron', 'Space Mono', sans-serif;
+  font-size: 1.05rem;
+}
+
+.vp-doc .obsidian-card-icon {
+  display: inline-block;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 14px;
+  background-color: var(--obs-icon-color);
+  box-shadow: inset 0 0 0 1px rgba(var(--obs-border-rgb), 0.18);
+  -webkit-mask: var(--icon) center / 24px no-repeat;
+  mask: var(--icon) center / 24px no-repeat;
+}
+
+.vp-doc .obsidian-card p {
+  margin: 0;
+  color: var(--obs-text-2);
+}
+
+.vp-doc .obsidian-card-compact {
+  min-height: 156px;
+}
+
+.vp-doc .obsidian-footer {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(var(--obs-border-rgb), 0.12);
+  color: var(--obs-text-3);
+  text-align: center;
+}
+
+.vp-doc .obsidian-footer a {
+  color: var(--obs-accent-3);
+}
+
+.VPFooter {
+  background: transparent;
+}
+
+@media (max-width: 768px) {
+  .vp-doc .obsidian-intro {
+    font-size: 0.96rem;
+  }
+
+  .vp-doc .obsidian-menu-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .vp-doc .obsidian-onboarding {
+    padding: 1rem;
+  }
+
+  .vp-doc .obsidian-onboarding-full {
+    min-height: auto;
+    padding: 1.1rem;
+  }
+}

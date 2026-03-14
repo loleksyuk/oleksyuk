@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Percentage Calculator | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .percentage-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .calc-tabs {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: var(--space-sm) var(--space-lg);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+        }
+        
+        .tab-btn.active {
+            background: var(--accent-gradient);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+        
+        .tab-btn:hover:not(.active) {
+            background: var(--oleksyuk-hover);
+        }
+        
+        .calc-panel {
+            display: none;
+            padding: var(--space-xl);
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .calc-panel.active {
+            display: block;
+        }
+        
+        .calc-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
+            text-align: center;
+        }
+        
+        .calc-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+        
+        .calc-row input {
+            width: 120px;
+            text-align: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 1.125rem;
+        }
+        
+        .calc-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+        
+        .result-box {
+            text-align: center;
+            padding: var(--space-lg);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius-md);
+            margin-top: var(--space-lg);
+        }
+        
+        .result-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .result-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--success);
+        }
+        
+        .quick-calc {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: var(--space-md);
+            margin-top: var(--space-xl);
+        }
+        
+        .quick-item {
+            padding: var(--space-md);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+        
+        .quick-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .quick-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            color: var(--accent-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk Percentage
+                    </h1>
+                    <p class="page-subtitle">Calculate percentages easily</p>
+                </header>
+                
+                <div class="percentage-container">
+                    <div class="calc-tabs animate-fade-in-up stagger-1">
+                        <button class="tab-btn active" data-tab="basic" onclick="showTab('basic')">Basic</button>
+                        <button class="tab-btn" data-tab="of" onclick="showTab('of')">% of Number</button>
+                        <button class="tab-btn" data-tab="change" onclick="showTab('change')">% Change</button>
+                        <button class="tab-btn" data-tab="whatpercent" onclick="showTab('whatpercent')">What %?</button>
+                    </div>
+                    
+                    <!-- Basic: What is X% of Y? -->
+                    <div class="calc-panel active animate-fade-in-up stagger-2" id="panel-basic">
+                        <div class="calc-title">What is X% of Y?</div>
+                        <div class="calc-row">
+                            <span class="calc-text">What is</span>
+                            <input type="number" id="basic-percent" placeholder="%" oninput="calcBasic()">
+                            <span class="calc-text">% of</span>
+                            <input type="number" id="basic-number" placeholder="Number" oninput="calcBasic()">
+                            <span class="calc-text">?</span>
+                        </div>
+                        <div class="result-box">
+                            <div class="result-label">Result</div>
+                            <div class="result-value" id="basic-result">-</div>
+                        </div>
+                    </div>
+                    
+                    <!-- % of Number -->
+                    <div class="calc-panel animate-fade-in-up" id="panel-of">
+                        <div class="calc-title">X is what percent of Y?</div>
+                        <div class="calc-row">
+                            <input type="number" id="of-x" placeholder="X" oninput="calcOf()">
+                            <span class="calc-text">is what % of</span>
+                            <input type="number" id="of-y" placeholder="Y" oninput="calcOf()">
+                            <span class="calc-text">?</span>
+                        </div>
+                        <div class="result-box">
+                            <div class="result-label">Result</div>
+                            <div class="result-value" id="of-result">-</div>
+                        </div>
+                    </div>
+                    
+                    <!-- % Change -->
+                    <div class="calc-panel animate-fade-in-up" id="panel-change">
+                        <div class="calc-title">Percentage Change</div>
+                        <div class="calc-row">
+                            <span class="calc-text">From</span>
+                            <input type="number" id="change-from" placeholder="Original" oninput="calcChange()">
+                            <span class="calc-text">to</span>
+                            <input type="number" id="change-to" placeholder="New" oninput="calcChange()">
+                        </div>
+                        <div class="result-box">
+                            <div class="result-label">Percentage Change</div>
+                            <div class="result-value" id="change-result">-</div>
+                        </div>
+                    </div>
+                    
+                    <!-- What Percent -->
+                    <div class="calc-panel animate-fade-in-up" id="panel-whatpercent">
+                        <div class="calc-title">X is Y% of what?</div>
+                        <div class="calc-row">
+                            <input type="number" id="wp-x" placeholder="X" oninput="calcWhatPercent()">
+                            <span class="calc-text">is</span>
+                            <input type="number" id="wp-percent" placeholder="%" oninput="calcWhatPercent()">
+                            <span class="calc-text">% of what?</span>
+                        </div>
+                        <div class="result-box">
+                            <div class="result-label">Result</div>
+                            <div class="result-value" id="wp-result">-</div>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-calc animate-fade-in-up stagger-3">
+                        <div class="quick-item">
+                            <div class="quick-label">Common: 10%</div>
+                            <div class="quick-value" id="quick-10">-</div>
+                        </div>
+                        <div class="quick-item">
+                            <div class="quick-label">Quarter: 25%</div>
+                            <div class="quick-value" id="quick-25">-</div>
+                        </div>
+                        <div class="quick-item">
+                            <div class="quick-label">Half: 50%</div>
+                            <div class="quick-value" id="quick-50">-</div>
+                        </div>
+                        <div class="quick-item">
+                            <div class="quick-label">Tip: 15%</div>
+                            <div class="quick-value" id="quick-15">-</div>
+                        </div>
+                        <div class="quick-item">
+                            <div class="quick-label">Tip: 20%</div>
+                            <div class="quick-value" id="quick-20">-</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-4">
+                        ← Back to Math
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+            document.querySelectorAll('.calc-panel').forEach(panel => {
+                panel.classList.toggle('active', panel.id === `panel-${tab}`);
+            });
+        }
+        
+        function formatResult(num) {
+            if (isNaN(num) || !isFinite(num)) return '-';
+            return Math.round(num * 100) / 100;
+        }
+        
+        function calcBasic() {
+            const percent = parseFloat(document.getElementById('basic-percent').value);
+            const number = parseFloat(document.getElementById('basic-number').value);
+            const result = (percent / 100) * number;
+            document.getElementById('basic-result').textContent = formatResult(result);
+            updateQuickCalcs(number);
+        }
+        
+        function calcOf() {
+            const x = parseFloat(document.getElementById('of-x').value);
+            const y = parseFloat(document.getElementById('of-y').value);
+            const result = (x / y) * 100;
+            document.getElementById('of-result').textContent = formatResult(result) + '%';
+        }
+        
+        function calcChange() {
+            const from = parseFloat(document.getElementById('change-from').value);
+            const to = parseFloat(document.getElementById('change-to').value);
+            const result = ((to - from) / from) * 100;
+            const sign = result >= 0 ? '+' : '';
+            document.getElementById('change-result').textContent = sign + formatResult(result) + '%';
+            document.getElementById('change-result').style.color = result >= 0 ? 'var(--success)' : 'var(--danger)';
+        }
+        
+        function calcWhatPercent() {
+            const x = parseFloat(document.getElementById('wp-x').value);
+            const percent = parseFloat(document.getElementById('wp-percent').value);
+            const result = (x / percent) * 100;
+            document.getElementById('wp-result').textContent = formatResult(result);
+        }
+        
+        function updateQuickCalcs(number) {
+            if (isNaN(number)) {
+                ['10', '25', '50', '15', '20'].forEach(p => {
+                    document.getElementById(`quick-${p}`).textContent = '-';
+                });
+                return;
+            }
+            document.getElementById('quick-10').textContent = formatResult(number * 0.1);
+            document.getElementById('quick-25').textContent = formatResult(number * 0.25);
+            document.getElementById('quick-50').textContent = formatResult(number * 0.5);
+            document.getElementById('quick-15').textContent = formatResult(number * 0.15);
+            document.getElementById('quick-20').textContent = formatResult(number * 0.2);
+        }
+    </script>
+</body>
+</html>

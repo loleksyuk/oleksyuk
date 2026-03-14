@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Tool | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .tool-shell { max-width: 980px; margin: 0 auto; }
+        .split-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-lg); }
+        .panel { background: var(--oleksyuk-card); border: 1px solid var(--oleksyuk-border); border-radius: var(--radius-lg); padding: var(--space-lg); }
+        .editor { min-height: 320px; font-family: 'Space Mono', monospace; }
+        .status { margin-top: var(--space-lg); padding: var(--space-md); border-radius: var(--radius-md); background: rgba(126, 144, 208, 0.08); border: 1px solid rgba(126, 144, 208, 0.18); color: var(--text-secondary); }
+        @media (max-width: 900px) { .split-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">Base64 Tool</h1>
+                    <p class="page-subtitle">Encode and decode text locally without sending it anywhere.</p>
+                </header>
+
+                <div class="tool-shell">
+                    <div class="action-row animate-fade-in-up stagger-1" style="justify-content: flex-start; margin-bottom: var(--space-lg);">
+                        <button class="btn btn-primary" onclick="encodeBase64()">Encode</button>
+                        <button class="btn btn-ghost" onclick="decodeBase64()">Decode</button>
+                        <button class="btn btn-ghost" onclick="swapValues()">Swap</button>
+                        <button class="btn btn-ghost" onclick="copyResult()">Copy Result</button>
+                    </div>
+
+                    <div class="split-grid">
+                        <section class="panel animate-fade-in-up stagger-2">
+                            <label for="base64Input">Input</label>
+                            <textarea id="base64Input" class="editor" placeholder="Paste text or Base64 here"></textarea>
+                        </section>
+                        <section class="panel animate-fade-in-up stagger-3">
+                            <label for="base64Output">Result</label>
+                            <textarea id="base64Output" class="editor" readonly></textarea>
+                        </section>
+                    </div>
+
+                    <div id="base64Status" class="status animate-fade-in-up stagger-4">Ready.</div>
+                </div>
+
+                <div class="menu-list" style="max-width: 320px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-5">← Back to Tools</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setStatus(message, ok) {
+            const el = document.getElementById('base64Status');
+            el.textContent = message;
+            el.style.borderColor = ok ? 'rgba(110, 231, 183, 0.24)' : 'rgba(251, 113, 133, 0.24)';
+            el.style.background = ok ? 'rgba(110, 231, 183, 0.08)' : 'rgba(251, 113, 133, 0.08)';
+        }
+
+        function toBase64(value) {
+            return btoa(unescape(encodeURIComponent(value)));
+        }
+
+        function fromBase64(value) {
+            return decodeURIComponent(escape(atob(value)));
+        }
+
+        function encodeBase64() {
+            try {
+                document.getElementById('base64Output').value = toBase64(document.getElementById('base64Input').value);
+                setStatus('Encoded successfully.', true);
+            } catch (error) {
+                setStatus('Unable to encode input.', false);
+            }
+        }
+
+        function decodeBase64() {
+            try {
+                document.getElementById('base64Output').value = fromBase64(document.getElementById('base64Input').value.trim());
+                setStatus('Decoded successfully.', true);
+            } catch (error) {
+                setStatus('Input is not valid Base64 text.', false);
+            }
+        }
+
+        function swapValues() {
+            const input = document.getElementById('base64Input');
+            const output = document.getElementById('base64Output');
+            const next = output.value;
+            output.value = input.value;
+            input.value = next;
+            setStatus('Swapped input and output.', true);
+        }
+
+        async function copyResult() {
+            const value = document.getElementById('base64Output').value;
+            if (!value) return;
+            try {
+                await navigator.clipboard.writeText(value);
+                setStatus('Result copied.', true);
+            } catch (error) {
+                window.prompt('Copy result:', value);
+            }
+        }
+    </script>
+</body>
+</html>

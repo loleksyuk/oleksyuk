@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook Sender | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .webhook-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+        
+        .input-group label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .input-group label span {
+            font-size: 1.125rem;
+        }
+        
+        .input-row {
+            display: flex;
+            gap: var(--space-md);
+        }
+        
+        .input-row .input-group {
+            flex: 1;
+        }
+        
+        textarea {
+            min-height: 120px;
+            font-family: 'Space Mono', monospace;
+            resize: vertical;
+        }
+        
+        .embed-section {
+            background: rgba(88, 101, 242, 0.1);
+            border: 1px solid rgba(88, 101, 242, 0.3);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+        }
+        
+        .embed-toggle {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            cursor: pointer;
+        }
+        
+        .embed-toggle input {
+            width: 20px;
+            height: 20px;
+            accent-color: #5865F2;
+        }
+        
+        .embed-fields {
+            display: none;
+        }
+        
+        .embed-fields.active {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+        
+        .color-row {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+        
+        .color-input {
+            width: 60px;
+            height: 40px;
+            padding: 2px;
+            background: transparent;
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+        }
+        
+        .preview-section {
+            background: #36393f;
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .preview-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: var(--space-md);
+            text-transform: uppercase;
+        }
+        
+        .message-preview {
+            display: flex;
+            gap: var(--space-md);
+        }
+        
+        .bot-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #5865F2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+        
+        .message-content {
+            flex: 1;
+        }
+        
+        .bot-name {
+            color: #5865F2;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            margin-bottom: var(--space-xs);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .bot-tag {
+            background: #5865F2;
+            color: white;
+            font-size: 0.625rem;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .message-text {
+            color: #dcddde;
+            font-size: 0.9375rem;
+            line-height: 1.375;
+            white-space: pre-wrap;
+        }
+        
+        .embed-preview {
+            margin-top: var(--space-md);
+            border-left: 4px solid #5865F2;
+            background: #2f3136;
+            border-radius: 4px;
+            padding: var(--space-md);
+        }
+        
+        .embed-title-preview {
+            color: #00aff4;
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .embed-desc-preview {
+            color: #dcddde;
+            font-size: 0.875rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+        }
+        
+        .status-message {
+            text-align: center;
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            margin-top: var(--space-lg);
+            display: none;
+        }
+        
+        .status-message.success {
+            display: block;
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+        }
+        
+        .status-message.error {
+            display: block;
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk Webhook
+                    </h1>
+                    <p class="page-subtitle">Send messages through Discord webhooks</p>
+                </header>
+                
+                <div class="webhook-container">
+                    <div class="input-section animate-fade-in-up stagger-1">
+                        <div class="input-group">
+                            <label><span>🔗</span> Webhook URL</label>
+                            <input type="url" id="webhookUrl" placeholder="https://discord.com/api/webhooks/..." oninput="updatePreview()">
+                        </div>
+                        
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label><span>👤</span> Bot Username (optional)</label>
+                                <input type="text" id="username" placeholder="Custom Bot Name" oninput="updatePreview()">
+                            </div>
+                            <div class="input-group">
+                                <label><span>🖼️</span> Avatar URL (optional)</label>
+                                <input type="url" id="avatarUrl" placeholder="https://..." oninput="updatePreview()">
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label><span>💬</span> Message Content</label>
+                            <textarea id="content" placeholder="Enter your message..." oninput="updatePreview()"></textarea>
+                        </div>
+                        
+                        <div class="embed-section">
+                            <label class="embed-toggle">
+                                <input type="checkbox" id="embedToggle" onchange="toggleEmbed()">
+                                <span style="color: var(--text-primary);">Include Embed</span>
+                            </label>
+                            
+                            <div class="embed-fields" id="embedFields">
+                                <div class="input-group">
+                                    <label>Embed Title</label>
+                                    <input type="text" id="embedTitle" placeholder="Embed title" oninput="updatePreview()">
+                                </div>
+                                <div class="input-group">
+                                    <label>Embed Description</label>
+                                    <textarea id="embedDesc" placeholder="Embed description" oninput="updatePreview()"></textarea>
+                                </div>
+                                <div class="color-row">
+                                    <label style="margin-bottom: 0;">Embed Color</label>
+                                    <input type="color" class="color-input" id="embedColor" value="#5865F2" oninput="updatePreview()">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="preview-section animate-fade-in-up stagger-2">
+                        <div class="preview-title">📱 Live Preview</div>
+                        <div class="message-preview">
+                            <div class="bot-avatar" id="previewAvatar">🤖</div>
+                            <div class="message-content">
+                                <div class="bot-name">
+                                    <span id="previewName">Webhook Bot</span>
+                                    <span class="bot-tag">BOT</span>
+                                </div>
+                                <div class="message-text" id="previewMessage">Your message will appear here...</div>
+                                <div class="embed-preview" id="embedPreview" style="display: none;">
+                                    <div class="embed-title-preview" id="previewEmbedTitle"></div>
+                                    <div class="embed-desc-preview" id="previewEmbedDesc"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons animate-fade-in-up stagger-3">
+                        <button class="btn btn-primary btn-lg" onclick="sendWebhook()">🚀 Send Message</button>
+                        <button class="btn btn-ghost" onclick="clearForm()">Clear</button>
+                    </div>
+                    
+                    <div class="status-message" id="statusMessage"></div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-4">
+                        ← Back to Discord
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleEmbed() {
+            const fields = document.getElementById('embedFields');
+            const toggle = document.getElementById('embedToggle');
+            fields.classList.toggle('active', toggle.checked);
+            updatePreview();
+        }
+        
+        function updatePreview() {
+            const username = document.getElementById('username').value || 'Webhook Bot';
+            const content = document.getElementById('content').value || 'Your message will appear here...';
+            const embedTitle = document.getElementById('embedTitle').value;
+            const embedDesc = document.getElementById('embedDesc').value;
+            const embedColor = document.getElementById('embedColor').value;
+            const showEmbed = document.getElementById('embedToggle').checked;
+            
+            document.getElementById('previewName').textContent = username;
+            document.getElementById('previewMessage').textContent = content;
+            
+            const embedPreview = document.getElementById('embedPreview');
+            if (showEmbed && (embedTitle || embedDesc)) {
+                embedPreview.style.display = 'block';
+                embedPreview.style.borderColor = embedColor;
+                document.getElementById('previewEmbedTitle').textContent = embedTitle;
+                document.getElementById('previewEmbedDesc').textContent = embedDesc;
+            } else {
+                embedPreview.style.display = 'none';
+            }
+        }
+        
+        async function sendWebhook() {
+            const webhookUrl = document.getElementById('webhookUrl').value;
+            const username = document.getElementById('username').value;
+            const avatarUrl = document.getElementById('avatarUrl').value;
+            const content = document.getElementById('content').value;
+            const showEmbed = document.getElementById('embedToggle').checked;
+            
+            if (!webhookUrl) {
+                showStatus('Please enter a webhook URL', 'error');
+                return;
+            }
+            
+            if (!webhookUrl.includes('discord.com/api/webhooks')) {
+                showStatus('Invalid webhook URL', 'error');
+                return;
+            }
+            
+            if (!content && !showEmbed) {
+                showStatus('Please enter a message or enable embed', 'error');
+                return;
+            }
+            
+            const payload = {};
+            if (content) payload.content = content;
+            if (username) payload.username = username;
+            if (avatarUrl) payload.avatar_url = avatarUrl;
+            
+            if (showEmbed) {
+                const embedTitle = document.getElementById('embedTitle').value;
+                const embedDesc = document.getElementById('embedDesc').value;
+                const embedColor = document.getElementById('embedColor').value;
+                
+                if (embedTitle || embedDesc) {
+                    payload.embeds = [{
+                        title: embedTitle || undefined,
+                        description: embedDesc || undefined,
+                        color: parseInt(embedColor.replace('#', ''), 16)
+                    }];
+                }
+            }
+            
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (response.ok || response.status === 204) {
+                    showStatus('Message sent successfully! ✓', 'success');
+                } else {
+                    showStatus('Failed to send message. Check your webhook URL.', 'error');
+                }
+            } catch (error) {
+                showStatus('Network error. CORS may be blocking the request.', 'error');
+            }
+        }
+        
+        function showStatus(message, type) {
+            const status = document.getElementById('statusMessage');
+            status.textContent = message;
+            status.className = 'status-message ' + type;
+            setTimeout(() => status.className = 'status-message', 3000);
+        }
+        
+        function clearForm() {
+            document.getElementById('webhookUrl').value = '';
+            document.getElementById('username').value = '';
+            document.getElementById('avatarUrl').value = '';
+            document.getElementById('content').value = '';
+            document.getElementById('embedTitle').value = '';
+            document.getElementById('embedDesc').value = '';
+            document.getElementById('embedToggle').checked = false;
+            toggleEmbed();
+            updatePreview();
+        }
+    </script>
+</body>
+</html>

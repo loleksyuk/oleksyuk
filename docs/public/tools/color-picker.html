@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Picker | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .color-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .color-preview {
+            height: 150px;
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            transition: background-color var(--transition-normal);
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .color-preview::after {
+            content: 'Click to pick color';
+            position: absolute;
+            bottom: var(--space-md);
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+        
+        .color-picker-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .value-card {
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+        }
+        
+        .value-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .value-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .value-text {
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .copy-btn {
+            padding: 4px 10px;
+            font-size: 0.7rem;
+            background: transparent;
+            border: 1px solid var(--oleksyuk-border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+        
+        .copy-btn:hover {
+            background: var(--oleksyuk-hover);
+            border-color: var(--accent-primary);
+        }
+        
+        .sliders-section {
+            margin-bottom: var(--space-xl);
+        }
+        
+        .slider-group {
+            margin-bottom: var(--space-md);
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .color-slider {
+            width: 100%;
+            height: 12px;
+            -webkit-appearance: none;
+            border-radius: 6px;
+            outline: none;
+        }
+        
+        .color-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        
+        #redSlider { background: linear-gradient(to right, #000, #f00); }
+        #greenSlider { background: linear-gradient(to right, #000, #0f0); }
+        #blueSlider { background: linear-gradient(to right, #000, #00f); }
+        
+        .palette-section {
+            padding: var(--space-lg);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-md);
+        }
+        
+        .palette-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+        }
+        
+        .palette-colors {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
+        
+        .palette-color {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all var(--transition-fast);
+        }
+        
+        .palette-color:hover {
+            transform: scale(1.1);
+            border-color: white;
+        }
+        
+        .saved-colors {
+            margin-top: var(--space-md);
+        }
+        
+        .saved-colors-title {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .saved-colors-list {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk Color Picker
+                    </h1>
+                    <p class="page-subtitle">Pick colors and get all formats</p>
+                </header>
+                
+                <div class="color-container">
+                    <div class="color-preview animate-fade-in-up stagger-1" id="colorPreview" style="background-color: #7c5cff;">
+                        <input type="color" class="color-picker-input" id="colorPicker" value="#7c5cff" oninput="updateFromPicker()">
+                        #7c5cff
+                    </div>
+                    
+                    <div class="values-grid animate-fade-in-up stagger-2">
+                        <div class="value-card">
+                            <div class="value-label">HEX</div>
+                            <div class="value-display">
+                                <span class="value-text" id="hexValue">#7c5cff</span>
+                                <button class="copy-btn" onclick="copyValue('hex')">Copy</button>
+                            </div>
+                        </div>
+                        <div class="value-card">
+                            <div class="value-label">RGB</div>
+                            <div class="value-display">
+                                <span class="value-text" id="rgbValue">rgb(124, 92, 255)</span>
+                                <button class="copy-btn" onclick="copyValue('rgb')">Copy</button>
+                            </div>
+                        </div>
+                        <div class="value-card">
+                            <div class="value-label">HSL</div>
+                            <div class="value-display">
+                                <span class="value-text" id="hslValue">hsl(252, 100%, 68%)</span>
+                                <button class="copy-btn" onclick="copyValue('hsl')">Copy</button>
+                            </div>
+                        </div>
+                        <div class="value-card">
+                            <div class="value-label">RGBA</div>
+                            <div class="value-display">
+                                <span class="value-text" id="rgbaValue">rgba(124, 92, 255, 1)</span>
+                                <button class="copy-btn" onclick="copyValue('rgba')">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="sliders-section animate-fade-in-up stagger-3">
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Red</span>
+                                <span id="redVal">124</span>
+                            </div>
+                            <input type="range" class="color-slider" id="redSlider" min="0" max="255" value="124" oninput="updateFromSliders()">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Green</span>
+                                <span id="greenVal">92</span>
+                            </div>
+                            <input type="range" class="color-slider" id="greenSlider" min="0" max="255" value="92" oninput="updateFromSliders()">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Blue</span>
+                                <span id="blueVal">255</span>
+                            </div>
+                            <input type="range" class="color-slider" id="blueSlider" min="0" max="255" value="255" oninput="updateFromSliders()">
+                        </div>
+                    </div>
+                    
+                    <div class="palette-section animate-fade-in-up stagger-4">
+                        <div class="palette-title">🎨 Quick Palette</div>
+                        <div class="palette-colors" id="palette"></div>
+                        
+                        <div class="saved-colors">
+                            <div class="saved-colors-title">💾 Saved Colors (click preview to save)</div>
+                            <div class="saved-colors-list" id="savedColors"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-5">
+                        ← Back to Tools
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const palette = [
+            '#f87171', '#fb923c', '#fbbf24', '#a3e635', '#4ade80', '#22d3d8',
+            '#60a5fa', '#818cf8', '#a78bfa', '#e879f9', '#f472b6', '#94a3b8',
+            '#000000', '#ffffff', '#7c5cff', '#5c8cff'
+        ];
+        
+        let savedColors = JSON.parse(localStorage.getItem('savedColors') || '[]');
+        
+        function initPalette() {
+            const container = document.getElementById('palette');
+            container.innerHTML = palette.map(color => 
+                `<div class="palette-color" style="background-color: ${color}" onclick="setColor('${color}')"></div>`
+            ).join('');
+            renderSavedColors();
+        }
+        
+        function renderSavedColors() {
+            const container = document.getElementById('savedColors');
+            container.innerHTML = savedColors.map(color => 
+                `<div class="palette-color" style="background-color: ${color}" onclick="setColor('${color}')" title="${color}"></div>`
+            ).join('');
+        }
+        
+        function setColor(hex) {
+            document.getElementById('colorPicker').value = hex;
+            updateFromPicker();
+        }
+        
+        function updateFromPicker() {
+            const hex = document.getElementById('colorPicker').value;
+            const rgb = hexToRgb(hex);
+            
+            document.getElementById('redSlider').value = rgb.r;
+            document.getElementById('greenSlider').value = rgb.g;
+            document.getElementById('blueSlider').value = rgb.b;
+            
+            updateDisplay(rgb.r, rgb.g, rgb.b);
+        }
+        
+        function updateFromSliders() {
+            const r = parseInt(document.getElementById('redSlider').value);
+            const g = parseInt(document.getElementById('greenSlider').value);
+            const b = parseInt(document.getElementById('blueSlider').value);
+            
+            document.getElementById('colorPicker').value = rgbToHex(r, g, b);
+            updateDisplay(r, g, b);
+        }
+        
+        function updateDisplay(r, g, b) {
+            const hex = rgbToHex(r, g, b);
+            const hsl = rgbToHsl(r, g, b);
+            
+            document.getElementById('redVal').textContent = r;
+            document.getElementById('greenVal').textContent = g;
+            document.getElementById('blueVal').textContent = b;
+            
+            document.getElementById('hexValue').textContent = hex;
+            document.getElementById('rgbValue').textContent = `rgb(${r}, ${g}, ${b})`;
+            document.getElementById('rgbaValue').textContent = `rgba(${r}, ${g}, ${b}, 1)`;
+            document.getElementById('hslValue').textContent = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+            
+            const preview = document.getElementById('colorPreview');
+            preview.style.backgroundColor = hex;
+            preview.style.color = (r * 0.299 + g * 0.587 + b * 0.114) > 186 ? '#000' : '#fff';
+            preview.childNodes[2].textContent = hex;
+        }
+        
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : {r: 0, g: 0, b: 0};
+        }
+        
+        function rgbToHex(r, g, b) {
+            return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+        }
+        
+        function rgbToHsl(r, g, b) {
+            r /= 255; g /= 255; b /= 255;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+            
+            if (max === min) {
+                h = s = 0;
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+                    case g: h = ((b - r) / d + 2) / 6; break;
+                    case b: h = ((r - g) / d + 4) / 6; break;
+                }
+            }
+            
+            return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+        }
+        
+        function copyValue(type) {
+            const element = document.getElementById(type + 'Value');
+            navigator.clipboard.writeText(element.textContent);
+            event.target.textContent = '✓';
+            setTimeout(() => event.target.textContent = 'Copy', 1500);
+        }
+        
+        document.getElementById('colorPreview').addEventListener('dblclick', () => {
+            const hex = document.getElementById('colorPicker').value;
+            if (!savedColors.includes(hex)) {
+                savedColors.unshift(hex);
+                if (savedColors.length > 10) savedColors.pop();
+                localStorage.setItem('savedColors', JSON.stringify(savedColors));
+                renderSavedColors();
+            }
+        });
+        
+        initPalette();
+    </script>
+</body>
+</html>

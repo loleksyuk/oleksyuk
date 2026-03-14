@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Timestamp | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .timestamp-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .datetime-section {
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .datetime-row {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+        
+        .input-group {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .input-group label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .input-group input {
+            width: 100%;
+            font-family: 'Space Mono', monospace;
+        }
+        
+        .quick-buttons {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .quick-btn {
+            padding: var(--space-xs) var(--space-md);
+            font-size: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--oleksyuk-border);
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .quick-btn:hover {
+            background: var(--oleksyuk-hover);
+            border-color: var(--accent-primary);
+        }
+        
+        .formats-section {
+            margin-top: var(--space-xl);
+        }
+        
+        .formats-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+        }
+        
+        .format-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+        
+        .format-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius-md);
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+        
+        .format-info {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .format-name {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .format-preview {
+            color: var(--text-primary);
+            font-size: 0.9375rem;
+        }
+        
+        .format-code {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-secondary);
+            background: rgba(0, 0, 0, 0.4);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-sm);
+            white-space: nowrap;
+        }
+        
+        .copy-btn {
+            padding: var(--space-sm) var(--space-md);
+            font-size: 0.75rem;
+            background: transparent;
+            border: 1px solid var(--oleksyuk-border);
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+        
+        .copy-btn:hover {
+            background: var(--accent-gradient);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+        
+        .unix-display {
+            text-align: center;
+            padding: var(--space-md);
+            background: rgba(88, 101, 242, 0.1);
+            border-radius: var(--radius-md);
+            margin-top: var(--space-lg);
+        }
+        
+        .unix-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .unix-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.25rem;
+            color: #5865F2;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk Timestamp
+                    </h1>
+                    <p class="page-subtitle">Generate Discord timestamps</p>
+                </header>
+                
+                <div class="timestamp-container">
+                    <div class="datetime-section animate-fade-in-up stagger-1">
+                        <div class="datetime-row">
+                            <div class="input-group">
+                                <label>Date</label>
+                                <input type="date" id="dateInput" onchange="updateTimestamps()">
+                            </div>
+                            <div class="input-group">
+                                <label>Time</label>
+                                <input type="time" id="timeInput" onchange="updateTimestamps()">
+                            </div>
+                        </div>
+                        
+                        <div class="quick-buttons">
+                            <button class="quick-btn" onclick="setQuickTime('now')">Now</button>
+                            <button class="quick-btn" onclick="setQuickTime('+1h')">+1 Hour</button>
+                            <button class="quick-btn" onclick="setQuickTime('+1d')">+1 Day</button>
+                            <button class="quick-btn" onclick="setQuickTime('+1w')">+1 Week</button>
+                            <button class="quick-btn" onclick="setQuickTime('noon')">Noon</button>
+                            <button class="quick-btn" onclick="setQuickTime('midnight')">Midnight</button>
+                        </div>
+                        
+                        <div class="unix-display">
+                            <div class="unix-label">Unix Timestamp</div>
+                            <div class="unix-value" id="unixTimestamp">-</div>
+                        </div>
+                    </div>
+                    
+                    <div class="formats-section animate-fade-in-up stagger-2">
+                        <div class="formats-title">📋 Timestamp Formats</div>
+                        <div class="format-list" id="formatList">
+                            <!-- Formats will be populated by JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-3">
+                        ← Back to Discord
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const formats = [
+            { code: 't', name: 'Short Time', example: '9:41 PM' },
+            { code: 'T', name: 'Long Time', example: '9:41:30 PM' },
+            { code: 'd', name: 'Short Date', example: '01/10/2026' },
+            { code: 'D', name: 'Long Date', example: 'January 10, 2026' },
+            { code: 'f', name: 'Short Date/Time', example: 'January 10, 2026 9:41 PM' },
+            { code: 'F', name: 'Long Date/Time', example: 'Saturday, January 10, 2026 9:41 PM' },
+            { code: 'R', name: 'Relative', example: 'in 2 hours' }
+        ];
+        
+        function initDateTime() {
+            const now = new Date();
+            document.getElementById('dateInput').value = now.toISOString().split('T')[0];
+            document.getElementById('timeInput').value = now.toTimeString().slice(0, 5);
+            updateTimestamps();
+        }
+        
+        function getSelectedTimestamp() {
+            const date = document.getElementById('dateInput').value;
+            const time = document.getElementById('timeInput').value;
+            if (!date || !time) return null;
+            return Math.floor(new Date(`${date}T${time}`).getTime() / 1000);
+        }
+        
+        function updateTimestamps() {
+            const timestamp = getSelectedTimestamp();
+            if (!timestamp) return;
+            
+            document.getElementById('unixTimestamp').textContent = timestamp;
+            
+            const formatList = document.getElementById('formatList');
+            formatList.innerHTML = formats.map(f => {
+                const code = `<t:${timestamp}:${f.code}>`;
+                const date = new Date(timestamp * 1000);
+                let preview = formatPreview(date, f.code);
+                
+                return `
+                    <div class="format-item">
+                        <div class="format-info">
+                            <div class="format-name">${f.name}</div>
+                            <div class="format-preview">${preview}</div>
+                        </div>
+                        <code class="format-code">${code}</code>
+                        <button class="copy-btn" onclick="copyCode('${code}', this)">Copy</button>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function formatPreview(date, code) {
+            const options = { hour12: true };
+            
+            switch(code) {
+                case 't': 
+                    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                case 'T': 
+                    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit' });
+                case 'd': 
+                    return date.toLocaleDateString('en-US');
+                case 'D': 
+                    return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                case 'f': 
+                    return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) + ' ' + 
+                           date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                case 'F': 
+                    return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) + ' ' + 
+                           date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                case 'R': 
+                    const diff = (date - new Date()) / 1000;
+                    if (Math.abs(diff) < 60) return 'just now';
+                    if (diff > 0) {
+                        if (diff < 3600) return `in ${Math.round(diff / 60)} minutes`;
+                        if (diff < 86400) return `in ${Math.round(diff / 3600)} hours`;
+                        return `in ${Math.round(diff / 86400)} days`;
+                    } else {
+                        if (-diff < 3600) return `${Math.round(-diff / 60)} minutes ago`;
+                        if (-diff < 86400) return `${Math.round(-diff / 3600)} hours ago`;
+                        return `${Math.round(-diff / 86400)} days ago`;
+                    }
+            }
+        }
+        
+        function setQuickTime(preset) {
+            const now = new Date();
+            let date = new Date();
+            
+            switch(preset) {
+                case 'now': break;
+                case '+1h': date.setHours(date.getHours() + 1); break;
+                case '+1d': date.setDate(date.getDate() + 1); break;
+                case '+1w': date.setDate(date.getDate() + 7); break;
+                case 'noon': 
+                    date.setHours(12, 0, 0, 0); 
+                    break;
+                case 'midnight': 
+                    date.setDate(date.getDate() + 1);
+                    date.setHours(0, 0, 0, 0); 
+                    break;
+            }
+            
+            document.getElementById('dateInput').value = date.toISOString().split('T')[0];
+            document.getElementById('timeInput').value = date.toTimeString().slice(0, 5);
+            updateTimestamps();
+        }
+        
+        function copyCode(code, btn) {
+            navigator.clipboard.writeText(code);
+            btn.textContent = '✓ Copied';
+            setTimeout(() => btn.textContent = 'Copy', 1500);
+        }
+        
+        initDateTime();
+    </script>
+</body>
+</html>

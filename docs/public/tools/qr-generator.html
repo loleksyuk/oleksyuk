@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        .qr-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .qr-display {
+            display: flex;
+            justify-content: center;
+            padding: var(--space-xl);
+            background: white;
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-xl);
+        }
+        
+        #qrCanvas {
+            max-width: 250px;
+            max-height: 250px;
+        }
+        
+        .placeholder-text {
+            color: #666;
+            font-size: 0.875rem;
+            text-align: center;
+            padding: var(--space-2xl);
+        }
+        
+        .input-section {
+            margin-bottom: var(--space-xl);
+        }
+        
+        .type-selector {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+        
+        .type-btn {
+            padding: var(--space-sm) var(--space-md);
+            font-size: 0.8rem;
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+            font-family: inherit;
+        }
+        
+        .type-btn.active {
+            background: var(--accent-gradient);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+        
+        .type-btn:hover:not(.active) {
+            background: var(--oleksyuk-hover);
+        }
+        
+        .input-fields {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+        
+        .input-group label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .options-row {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+        
+        .option-item {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .option-item label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .option-item select {
+            width: 100%;
+            padding: var(--space-sm);
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+        
+        .color-input {
+            width: 100%;
+            height: 40px;
+            padding: 2px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk QR Generator
+                    </h1>
+                    <p class="page-subtitle">Create QR codes for anything</p>
+                </header>
+                
+                <div class="qr-container">
+                    <div class="qr-display animate-fade-in-up stagger-1" id="qrDisplay">
+                        <canvas id="qrCanvas"></canvas>
+                    </div>
+                    
+                    <div class="input-section animate-fade-in-up stagger-2">
+                        <div class="type-selector">
+                            <button class="type-btn active" data-type="text" onclick="setType('text')">📝 Text/URL</button>
+                            <button class="type-btn" data-type="wifi" onclick="setType('wifi')">📶 WiFi</button>
+                            <button class="type-btn" data-type="email" onclick="setType('email')">📧 Email</button>
+                            <button class="type-btn" data-type="phone" onclick="setType('phone')">📞 Phone</button>
+                            <button class="type-btn" data-type="sms" onclick="setType('sms')">💬 SMS</button>
+                        </div>
+                        
+                        <div class="input-fields" id="inputFields">
+                            <div class="input-group">
+                                <label>Text or URL</label>
+                                <input type="text" id="textInput" placeholder="Enter text or URL..." oninput="generateQR()">
+                            </div>
+                        </div>
+                        
+                        <div class="options-row" style="margin-top: var(--space-lg);">
+                            <div class="option-item">
+                                <label>Size</label>
+                                <select id="sizeSelect" onchange="generateQR()">
+                                    <option value="150">Small (150px)</option>
+                                    <option value="250" selected>Medium (250px)</option>
+                                    <option value="350">Large (350px)</option>
+                                </select>
+                            </div>
+                            <div class="option-item">
+                                <label>Foreground</label>
+                                <input type="color" class="color-input" id="fgColor" value="#000000" onchange="generateQR()">
+                            </div>
+                            <div class="option-item">
+                                <label>Background</label>
+                                <input type="color" class="color-input" id="bgColor" value="#ffffff" onchange="generateQR()">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons animate-fade-in-up stagger-3">
+                        <button class="btn btn-primary" onclick="downloadQR()">⬇️ Download PNG</button>
+                        <button class="btn btn-ghost" onclick="clearQR()">Clear</button>
+                    </div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-4">
+                        ← Back to Tools
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentType = 'text';
+        
+        const inputTemplates = {
+            text: `<div class="input-group">
+                <label>Text or URL</label>
+                <input type="text" id="textInput" placeholder="Enter text or URL..." oninput="generateQR()">
+            </div>`,
+            wifi: `<div class="input-group">
+                <label>Network Name (SSID)</label>
+                <input type="text" id="wifiSsid" placeholder="WiFi name" oninput="generateQR()">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="text" id="wifiPass" placeholder="WiFi password" oninput="generateQR()">
+            </div>
+            <div class="input-group">
+                <label>Security</label>
+                <select id="wifiSecurity" onchange="generateQR()">
+                    <option value="WPA">WPA/WPA2</option>
+                    <option value="WEP">WEP</option>
+                    <option value="">None</option>
+                </select>
+            </div>`,
+            email: `<div class="input-group">
+                <label>Email Address</label>
+                <input type="email" id="emailAddr" placeholder="email@example.com" oninput="generateQR()">
+            </div>
+            <div class="input-group">
+                <label>Subject (optional)</label>
+                <input type="text" id="emailSubject" placeholder="Subject line" oninput="generateQR()">
+            </div>`,
+            phone: `<div class="input-group">
+                <label>Phone Number</label>
+                <input type="tel" id="phoneNum" placeholder="+1234567890" oninput="generateQR()">
+            </div>`,
+            sms: `<div class="input-group">
+                <label>Phone Number</label>
+                <input type="tel" id="smsNum" placeholder="+1234567890" oninput="generateQR()">
+            </div>
+            <div class="input-group">
+                <label>Message (optional)</label>
+                <input type="text" id="smsMsg" placeholder="Your message" oninput="generateQR()">
+            </div>`
+        };
+        
+        function setType(type) {
+            currentType = type;
+            document.querySelectorAll('.type-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.type === type);
+            });
+            document.getElementById('inputFields').innerHTML = inputTemplates[type];
+            generateQR();
+        }
+        
+        function getQRData() {
+            switch (currentType) {
+                case 'text':
+                    return document.getElementById('textInput')?.value || '';
+                case 'wifi':
+                    const ssid = document.getElementById('wifiSsid')?.value || '';
+                    const pass = document.getElementById('wifiPass')?.value || '';
+                    const security = document.getElementById('wifiSecurity')?.value || 'WPA';
+                    return ssid ? `WIFI:T:${security};S:${ssid};P:${pass};;` : '';
+                case 'email':
+                    const email = document.getElementById('emailAddr')?.value || '';
+                    const subject = document.getElementById('emailSubject')?.value || '';
+                    return email ? `mailto:${email}${subject ? '?subject=' + encodeURIComponent(subject) : ''}` : '';
+                case 'phone':
+                    const phone = document.getElementById('phoneNum')?.value || '';
+                    return phone ? `tel:${phone}` : '';
+                case 'sms':
+                    const smsNum = document.getElementById('smsNum')?.value || '';
+                    const smsMsg = document.getElementById('smsMsg')?.value || '';
+                    return smsNum ? `sms:${smsNum}${smsMsg ? '?body=' + encodeURIComponent(smsMsg) : ''}` : '';
+                default:
+                    return '';
+            }
+        }
+        
+        function generateQR() {
+            const data = getQRData();
+            const canvas = document.getElementById('qrCanvas');
+            const size = parseInt(document.getElementById('sizeSelect').value);
+            const fgColor = document.getElementById('fgColor').value;
+            const bgColor = document.getElementById('bgColor').value;
+            
+            if (!data) {
+                const ctx = canvas.getContext('2d');
+                canvas.width = size;
+                canvas.height = size;
+                ctx.fillStyle = bgColor;
+                ctx.fillRect(0, 0, size, size);
+                ctx.fillStyle = '#666';
+                ctx.font = '14px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('Enter content to generate QR', size/2, size/2);
+                return;
+            }
+            
+            QRCode.toCanvas(canvas, data, {
+                width: size,
+                color: {
+                    dark: fgColor,
+                    light: bgColor
+                },
+                margin: 2
+            });
+        }
+        
+        function downloadQR() {
+            const canvas = document.getElementById('qrCanvas');
+            const link = document.createElement('a');
+            link.download = 'qrcode.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        function clearQR() {
+            document.getElementById('inputFields').innerHTML = inputTemplates[currentType];
+            generateQR();
+        }
+        
+        // Initial generation
+        generateQR();
+    </script>
+</body>
+</html>

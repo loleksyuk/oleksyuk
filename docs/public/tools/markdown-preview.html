@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Preview | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .tool-shell { max-width: 1120px; margin: 0 auto; }
+        .split-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-lg); }
+        .panel { background: var(--oleksyuk-card); border: 1px solid var(--oleksyuk-border); border-radius: var(--radius-lg); padding: var(--space-lg); }
+        .editor { min-height: 360px; font-family: 'Space Mono', monospace; }
+        .preview { min-height: 360px; color: var(--text-primary); }
+        .preview h1, .preview h2, .preview h3 { margin-bottom: var(--space-sm); }
+        .preview p, .preview ul, .preview pre { margin-bottom: var(--space-md); }
+        .preview ul { padding-left: 1.25rem; }
+        .preview code, .preview pre { background: rgba(0, 0, 0, 0.24); border-radius: var(--radius-sm); }
+        .preview pre { padding: var(--space-md); overflow-x: auto; }
+        .preview a { color: var(--accent-secondary); }
+        @media (max-width: 900px) { .split-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">Markdown Preview</h1>
+                    <p class="page-subtitle">Draft simple markdown and preview it without leaving the browser.</p>
+                </header>
+                <div class="tool-shell">
+                    <div class="split-grid">
+                        <section class="panel animate-fade-in-up stagger-1">
+                            <label for="markdownInput">Markdown</label>
+                            <textarea id="markdownInput" class="editor" oninput="renderMarkdown()"># oleksyuk
+
+Write **markdown** here.
+
+- Fast notes
+- Simple lists
+- `inline code`
+
+[OpenAI](https://openai.com)</textarea>
+                        </section>
+                        <section class="panel animate-fade-in-up stagger-2">
+                            <div class="panel-title">Preview</div>
+                            <div id="markdownPreview" class="preview"></div>
+                        </section>
+                    </div>
+                </div>
+                <div class="menu-list" style="max-width: 320px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-3">← Back to Tools</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function escapeHtml(value) {
+            return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function renderMarkdown() {
+            const raw = escapeHtml(document.getElementById('markdownInput').value);
+            const lines = raw.split('\n');
+            let html = '';
+            let inList = false;
+            let inCode = false;
+
+            for (const line of lines) {
+                if (line.startsWith('```')) {
+                    html += inCode ? '</code></pre>' : '<pre><code>';
+                    inCode = !inCode;
+                    continue;
+                }
+                if (inCode) {
+                    html += line + '\n';
+                    continue;
+                }
+                if (/^###\s+/.test(line)) {
+                    if (inList) { html += '</ul>'; inList = false; }
+                    html += '<h3>' + formatInline(line.replace(/^###\s+/, '')) + '</h3>';
+                    continue;
+                }
+                if (/^##\s+/.test(line)) {
+                    if (inList) { html += '</ul>'; inList = false; }
+                    html += '<h2>' + formatInline(line.replace(/^##\s+/, '')) + '</h2>';
+                    continue;
+                }
+                if (/^#\s+/.test(line)) {
+                    if (inList) { html += '</ul>'; inList = false; }
+                    html += '<h1>' + formatInline(line.replace(/^#\s+/, '')) + '</h1>';
+                    continue;
+                }
+                if (/^-\s+/.test(line)) {
+                    if (!inList) { html += '<ul>'; inList = true; }
+                    html += '<li>' + formatInline(line.replace(/^-\s+/, '')) + '</li>';
+                    continue;
+                }
+                if (inList) { html += '</ul>'; inList = false; }
+                if (!line.trim()) {
+                    html += '';
+                    continue;
+                }
+                html += '<p>' + formatInline(line) + '</p>';
+            }
+
+            if (inList) html += '</ul>';
+            if (inCode) html += '</code></pre>';
+            document.getElementById('markdownPreview').innerHTML = html;
+        }
+
+        function formatInline(value) {
+            return value
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+                .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+        }
+
+        renderMarkdown();
+    </script>
+</body>
+</html>

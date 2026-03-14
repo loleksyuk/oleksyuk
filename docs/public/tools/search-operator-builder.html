@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Operator Builder | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .builder-container {
+            max-width: 880px;
+            margin: 0 auto;
+        }
+
+        .builder-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: var(--space-lg);
+        }
+
+        .panel {
+            padding: var(--space-xl);
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .panel-copy {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
+        }
+
+        .field-grid {
+            display: grid;
+            gap: var(--space-md);
+        }
+
+        .toggle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: var(--space-sm);
+            margin-top: var(--space-sm);
+        }
+
+        .toggle-card {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-md);
+            background: rgba(0, 0, 0, 0.22);
+        }
+
+        .query-box {
+            min-height: 160px;
+            padding: var(--space-lg);
+            background: rgba(0, 0, 0, 0.26);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-md);
+            color: var(--accent-secondary);
+            word-break: break-word;
+        }
+
+        .engine-list {
+            display: grid;
+            gap: var(--space-sm);
+            margin-top: var(--space-lg);
+        }
+
+        .engine-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--oleksyuk-border);
+            background: rgba(0, 0, 0, 0.22);
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+        }
+
+        .engine-link:hover {
+            background: var(--oleksyuk-hover);
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+
+        .operator-list {
+            display: grid;
+            gap: var(--space-sm);
+            margin-top: var(--space-lg);
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+        }
+
+        .operator-item {
+            padding: var(--space-sm) var(--space-md);
+            border-left: 2px solid var(--accent-primary);
+            background: rgba(126, 144, 208, 0.08);
+        }
+
+        @media (max-width: 820px) {
+            .builder-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">Search Operator Builder</h1>
+                    <p class="page-subtitle">Build clean search strings for normal discovery, filtering, and documentation lookup.</p>
+                </header>
+
+                <div class="builder-container">
+                    <div class="builder-grid">
+                        <section class="panel animate-fade-in-up stagger-1">
+                            <h2 class="panel-title">Build Query</h2>
+                            <p class="panel-copy">Combine keywords with common search operators without typing them by hand each time.</p>
+                            <div class="field-grid">
+                                <div class="input-group">
+                                    <label for="keywordInput">Keywords</label>
+                                    <input id="keywordInput" type="text" placeholder="release notes changelog api" oninput="updateQuery()">
+                                </div>
+                                <div class="input-group">
+                                    <label for="phraseBuilderInput">Exact phrase</label>
+                                    <input id="phraseBuilderInput" type="text" placeholder="optional exact phrase" oninput="updateQuery()">
+                                </div>
+                                <div class="input-row">
+                                    <div class="input-group">
+                                        <label for="siteBuilderInput">Site or domain</label>
+                                        <input id="siteBuilderInput" type="text" placeholder="docs.example.com" oninput="updateQuery()">
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="filetypeInput">File type</label>
+                                        <select id="filetypeInput" onchange="updateQuery()">
+                                            <option value="">None</option>
+                                            <option value="pdf">PDF</option>
+                                            <option value="docx">DOCX</option>
+                                            <option value="pptx">PPTX</option>
+                                            <option value="xlsx">XLSX</option>
+                                            <option value="txt">TXT</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="toggle-grid">
+                                <label class="toggle-card">
+                                    <input id="titleOnly" type="checkbox" onchange="updateQuery()">
+                                    <span>Require title match</span>
+                                </label>
+                                <label class="toggle-card">
+                                    <input id="urlOnly" type="checkbox" onchange="updateQuery()">
+                                    <span>Require URL match</span>
+                                </label>
+                                <label class="toggle-card">
+                                    <input id="excludeSubdomains" type="checkbox" onchange="updateQuery()">
+                                    <span>Prefer exact host</span>
+                                </label>
+                            </div>
+
+                            <div class="action-row" style="margin-top: var(--space-lg); justify-content: flex-start;">
+                                <button class="btn btn-primary" onclick="copyBuiltQuery()">Copy Query</button>
+                                <button class="btn btn-ghost" onclick="clearBuilder()">Clear</button>
+                            </div>
+                        </section>
+
+                        <section class="panel animate-fade-in-up stagger-2">
+                            <h2 class="panel-title">Result</h2>
+                            <p class="panel-copy">Use the query directly or open it in your preferred search engine.</p>
+                            <div class="query-box" id="builtQuery">release notes changelog api</div>
+
+                            <div class="engine-list">
+                                <a id="openGoogle" class="engine-link" href="#" target="_blank" rel="noopener noreferrer">
+                                    <span>Open in Google</span>
+                                    <span>↗</span>
+                                </a>
+                                <a id="openBing" class="engine-link" href="#" target="_blank" rel="noopener noreferrer">
+                                    <span>Open in Bing</span>
+                                    <span>↗</span>
+                                </a>
+                                <a id="openDuck" class="engine-link" href="#" target="_blank" rel="noopener noreferrer">
+                                    <span>Open in DuckDuckGo</span>
+                                    <span>↗</span>
+                                </a>
+                            </div>
+
+                            <div class="operator-list">
+                                <div class="operator-item"><code>site:</code> narrows to a domain or hostname.</div>
+                                <div class="operator-item"><code>filetype:</code> focuses on a document format.</div>
+                                <div class="operator-item"><code>intitle:</code> looks for terms in the page title.</div>
+                                <div class="operator-item"><code>inurl:</code> looks for terms in the URL itself.</div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="menu-list" style="max-width: 320px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-3">
+                        ← Back to Tools
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function normalizeHost(value) {
+            return value.replace(/^https?:\/\//, '').replace(/\/.*$/, '').trim();
+        }
+
+        function updateQuery() {
+            const keywordValue = document.getElementById('keywordInput').value.trim();
+            const phraseValue = document.getElementById('phraseBuilderInput').value.trim();
+            const hostValue = normalizeHost(document.getElementById('siteBuilderInput').value);
+            const filetypeValue = document.getElementById('filetypeInput').value;
+            const titleOnly = document.getElementById('titleOnly').checked;
+            const urlOnly = document.getElementById('urlOnly').checked;
+            const exactHost = document.getElementById('excludeSubdomains').checked;
+            const parts = [];
+
+            if (keywordValue) {
+                parts.push(keywordValue);
+            }
+
+            if (phraseValue) {
+                const wrappedPhrase = '"' + phraseValue + '"';
+                if (titleOnly) {
+                    parts.push('intitle:' + wrappedPhrase);
+                } else if (urlOnly) {
+                    parts.push('inurl:' + phraseValue.replace(/\s+/g, '-'));
+                } else {
+                    parts.push(wrappedPhrase);
+                }
+            }
+
+            if (hostValue) {
+                parts.push(exactHost ? 'site:' + hostValue : 'site:' + hostValue);
+            }
+
+            if (filetypeValue) {
+                parts.push('filetype:' + filetypeValue);
+            }
+
+            if (!keywordValue && !phraseValue && !hostValue && !filetypeValue) {
+                parts.push('release notes changelog api');
+            }
+
+            const query = parts.join(' ').trim();
+            const encoded = encodeURIComponent(query);
+
+            document.getElementById('builtQuery').textContent = query;
+            document.getElementById('openGoogle').href = 'https://www.google.com/search?q=' + encoded;
+            document.getElementById('openBing').href = 'https://www.bing.com/search?q=' + encoded;
+            document.getElementById('openDuck').href = 'https://duckduckgo.com/?q=' + encoded;
+        }
+
+        async function copyBuiltQuery() {
+            const query = document.getElementById('builtQuery').textContent;
+            try {
+                await navigator.clipboard.writeText(query);
+            } catch (error) {
+                window.prompt('Copy query:', query);
+            }
+        }
+
+        function clearBuilder() {
+            document.getElementById('keywordInput').value = '';
+            document.getElementById('phraseBuilderInput').value = '';
+            document.getElementById('siteBuilderInput').value = '';
+            document.getElementById('filetypeInput').value = '';
+            document.getElementById('titleOnly').checked = false;
+            document.getElementById('urlOnly').checked = false;
+            document.getElementById('excludeSubdomains').checked = false;
+            updateQuery();
+        }
+
+        updateQuery();
+    </script>
+</body>
+</html>

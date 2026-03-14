@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .roulette-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .balance-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md) var(--space-lg);
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+        
+        .balance-amount {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--success);
+        }
+        
+        .balance-amount::before {
+            content: '💰 $';
+        }
+        
+        .bet-input {
+            width: 150px;
+            padding: var(--space-sm) var(--space-md);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .wheel-section {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .wheel-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto var(--space-lg);
+        }
+        
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                #dc2626 0deg 9.73deg, #1e1e1e 9.73deg 19.46deg,
+                #dc2626 19.46deg 29.19deg, #1e1e1e 29.19deg 38.92deg,
+                #dc2626 38.92deg 48.65deg, #1e1e1e 48.65deg 58.38deg,
+                #dc2626 58.38deg 68.11deg, #1e1e1e 68.11deg 77.84deg,
+                #dc2626 77.84deg 87.57deg, #1e1e1e 87.57deg 97.3deg,
+                #dc2626 97.3deg 107.03deg, #1e1e1e 107.03deg 116.76deg,
+                #dc2626 116.76deg 126.49deg, #1e1e1e 126.49deg 136.22deg,
+                #dc2626 136.22deg 145.95deg, #1e1e1e 145.95deg 155.68deg,
+                #dc2626 155.68deg 165.41deg, #1e1e1e 165.41deg 175.14deg,
+                #16a34a 175.14deg 184.87deg,
+                #dc2626 184.87deg 194.6deg, #1e1e1e 194.6deg 204.33deg,
+                #dc2626 204.33deg 214.06deg, #1e1e1e 214.06deg 223.79deg,
+                #dc2626 223.79deg 233.52deg, #1e1e1e 233.52deg 243.25deg,
+                #dc2626 243.25deg 252.98deg, #1e1e1e 252.98deg 262.71deg,
+                #dc2626 262.71deg 272.44deg, #1e1e1e 272.44deg 282.17deg,
+                #dc2626 282.17deg 291.9deg, #1e1e1e 291.9deg 301.63deg,
+                #dc2626 301.63deg 311.36deg, #1e1e1e 311.36deg 321.09deg,
+                #dc2626 321.09deg 330.82deg, #1e1e1e 330.82deg 340.55deg,
+                #dc2626 340.55deg 350.28deg, #1e1e1e 350.28deg 360deg
+            );
+            border: 8px solid #5a6da9;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.3);
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+        
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #aab7e4, #7487c7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #0f1319;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+        
+        .wheel-pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid #8ea1d8;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+        }
+        
+        .result-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: var(--space-lg);
+            min-height: 3rem;
+        }
+        
+        .betting-section {
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .bet-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .bet-option {
+            padding: var(--space-lg);
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--oleksyuk-border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .bet-option:hover {
+            background: var(--oleksyuk-hover);
+            border-color: var(--accent-primary);
+        }
+        
+        .bet-option.selected {
+            border-color: var(--accent-primary);
+            background: rgba(142, 161, 216, 0.12);
+            box-shadow: 0 0 15px rgba(126, 144, 208, 0.22);
+        }
+        
+        .bet-option.red { color: #dc2626; }
+        .bet-option.black { color: #a0a0a0; }
+        .bet-option.green { color: #16a34a; }
+        
+        .bet-multiplier {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: var(--space-xs);
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk Roulette
+                    </h1>
+                    <p class="page-subtitle">Spin the wheel of fortune</p>
+                </header>
+                
+                <div class="roulette-container">
+                    <div class="balance-bar animate-fade-in-up stagger-1">
+                        <span class="balance-amount" id="balance">10000</span>
+                        <div style="display: flex; align-items: center; gap: var(--space-sm);">
+                            <label style="color: var(--text-secondary);">Bet:</label>
+                            <input type="number" id="betAmount" class="bet-input" placeholder="Amount" min="1" value="100">
+                        </div>
+                    </div>
+                    
+                    <div class="wheel-section animate-fade-in-up stagger-2">
+                        <div class="wheel-container">
+                            <div class="wheel-pointer"></div>
+                            <div class="wheel" id="wheel"></div>
+                            <div class="wheel-center" id="resultNumber">?</div>
+                        </div>
+                        <div class="result-display" id="resultText">Place your bet and spin!</div>
+                    </div>
+                    
+                    <div class="betting-section animate-fade-in-up stagger-3">
+                        <div class="bet-options">
+                            <div class="bet-option red" data-bet="red" onclick="selectBet('red')">
+                                🔴 RED
+                                <div class="bet-multiplier">2x payout</div>
+                            </div>
+                            <div class="bet-option green" data-bet="green" onclick="selectBet('green')">
+                                🟢 GREEN (0)
+                                <div class="bet-multiplier">14x payout</div>
+                            </div>
+                            <div class="bet-option black" data-bet="black" onclick="selectBet('black')">
+                                ⚫ BLACK
+                                <div class="bet-multiplier">2x payout</div>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary btn-lg" id="spinBtn" onclick="spin()">🎡 SPIN</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-4">
+                        ← Back to Casino
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let balance = 10000;
+        let selectedBet = null;
+        let spinning = false;
+        
+        const numbers = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
+        const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
+        
+        window.onload = function() {
+            const saved = localStorage.getItem('rouletteBalance');
+            if (saved) balance = parseFloat(saved);
+            updateBalance();
+        };
+        
+        function updateBalance() {
+            document.getElementById('balance').textContent = balance.toLocaleString();
+            localStorage.setItem('rouletteBalance', balance);
+        }
+        
+        function selectBet(bet) {
+            selectedBet = bet;
+            document.querySelectorAll('.bet-option').forEach(el => el.classList.remove('selected'));
+            document.querySelector(`[data-bet="${bet}"]`).classList.add('selected');
+        }
+        
+        function getColor(num) {
+            if (num === 0) return 'green';
+            return redNumbers.includes(num) ? 'red' : 'black';
+        }
+        
+        function spin() {
+            if (spinning) return;
+            
+            const betAmount = parseInt(document.getElementById('betAmount').value);
+            if (!selectedBet) {
+                alert('Please select a bet (Red, Green, or Black)');
+                return;
+            }
+            if (isNaN(betAmount) || betAmount <= 0) {
+                alert('Please enter a valid bet amount');
+                return;
+            }
+            if (betAmount > balance) {
+                alert('Insufficient balance');
+                return;
+            }
+            
+            spinning = true;
+            balance -= betAmount;
+            updateBalance();
+            document.getElementById('spinBtn').disabled = true;
+            document.getElementById('resultText').textContent = 'Spinning...';
+            
+            // Random result
+            const resultIndex = Math.floor(Math.random() * numbers.length);
+            const resultNumber = numbers[resultIndex];
+            const resultColor = getColor(resultNumber);
+            
+            // Calculate rotation
+            const degreesPerSlot = 360 / numbers.length;
+            const randomSpins = 5 + Math.random() * 3; // 5-8 full rotations
+            const finalRotation = randomSpins * 360 + (resultIndex * degreesPerSlot);
+            
+            const wheel = document.getElementById('wheel');
+            wheel.style.transform = `rotate(${finalRotation}deg)`;
+            
+            setTimeout(() => {
+                document.getElementById('resultNumber').textContent = resultNumber;
+                
+                let winAmount = 0;
+                let message = '';
+                
+                if (selectedBet === resultColor) {
+                    const multiplier = resultColor === 'green' ? 14 : 2;
+                    winAmount = betAmount * multiplier;
+                    balance += winAmount;
+                    message = `🎉 ${resultColor.toUpperCase()} ${resultNumber}! You win $${winAmount.toLocaleString()}!`;
+                    document.getElementById('resultText').style.color = 'var(--success)';
+                } else {
+                    message = `${resultColor.toUpperCase()} ${resultNumber} - You lose $${betAmount.toLocaleString()}`;
+                    document.getElementById('resultText').style.color = 'var(--danger)';
+                }
+                
+                document.getElementById('resultText').textContent = message;
+                updateBalance();
+                spinning = false;
+                document.getElementById('spinBtn').disabled = false;
+            }, 4000);
+        }
+    </script>
+</body>
+</html>

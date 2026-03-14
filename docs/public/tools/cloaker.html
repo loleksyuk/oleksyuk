@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloaker | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .cloaker-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .notice-box {
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-bottom: var(--space-xl);
+            font-size: 0.875rem;
+            color: var(--warning);
+            text-align: center;
+        }
+        
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+        
+        .input-group label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .input-group label span {
+            font-size: 1.25rem;
+        }
+        
+        .input-group input {
+            font-family: 'Space Mono', monospace;
+        }
+        
+        .preset-icons {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+            margin-top: var(--space-sm);
+        }
+        
+        .preset-btn {
+            padding: var(--space-xs) var(--space-sm);
+            font-size: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--oleksyuk-border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+        
+        .preset-btn:hover {
+            background: var(--oleksyuk-hover);
+            color: var(--text-primary);
+            border-color: var(--accent-primary);
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+        
+        .how-it-works {
+            margin-top: var(--space-2xl);
+            padding: var(--space-lg);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-md);
+        }
+        
+        .how-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .how-steps {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+        
+        .step {
+            display: flex;
+            gap: var(--space-md);
+            align-items: flex-start;
+        }
+        
+        .step-num {
+            width: 28px;
+            height: 28px;
+            background: var(--accent-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.875rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk Cloaker V2
+                    </h1>
+                    <p class="page-subtitle">Open any website with a custom tab name and icon</p>
+                </header>
+                
+                <div class="cloaker-container">
+                    <div class="notice-box animate-fade-in-up stagger-1">
+                        ⚠️ This cloaker may not work with Google services (YouTube, Google Docs, etc.) due to their security policies.
+                    </div>
+                    
+                    <div class="input-section animate-fade-in-up stagger-2">
+                        <div class="input-group">
+                            <label><span>🌐</span> Website URL</label>
+                            <input type="text" id="urlInput" placeholder="https://example.com">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label><span>📝</span> Tab Name</label>
+                            <input type="text" id="tabNameInput" placeholder="Google Classroom">
+                            <div class="preset-icons">
+                                <button class="preset-btn" onclick="setPreset('Google Classroom', 'https://ssl.gstatic.com/classroom/favicon.png')">Classroom</button>
+                                <button class="preset-btn" onclick="setPreset('Google Docs', 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico')">Docs</button>
+                                <button class="preset-btn" onclick="setPreset('Canvas', 'https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico')">Canvas</button>
+                                <button class="preset-btn" onclick="setPreset('Schoology', 'https://asset-cdn.schoology.com/sites/all/themes/flavor/images/favicon-32x32.png')">Schoology</button>
+                                <button class="preset-btn" onclick="setPreset('Khan Academy', 'https://cdn.kastatic.org/images/favicon.ico')">Khan Academy</button>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label><span>🖼️</span> Icon URL (optional)</label>
+                            <input type="text" id="iconInput" placeholder="https://example.com/favicon.ico">
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons animate-fade-in-up stagger-3">
+                        <button class="btn btn-primary btn-lg" onclick="openInAboutBlank()">🚀 Open Cloaked</button>
+                        <button class="btn btn-ghost" onclick="clearInputs()">Clear</button>
+                    </div>
+                    
+                    <div class="how-it-works animate-fade-in-up stagger-4">
+                        <div class="how-title">
+                            <span>💡</span> How It Works
+                        </div>
+                        <div class="how-steps">
+                            <div class="step">
+                                <span class="step-num">1</span>
+                                <span class="step-text">Enter the URL of the website you want to visit</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-num">2</span>
+                                <span class="step-text">Choose a disguised tab name (appears in browser tab)</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-num">3</span>
+                                <span class="step-text">Optionally add a favicon URL for extra stealth</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-num">4</span>
+                                <span class="step-text">Click "Open Cloaked" — site opens in an about:blank page</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-5">
+                        ← Back to Tools
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setPreset(name, icon) {
+            document.getElementById('tabNameInput').value = name;
+            document.getElementById('iconInput').value = icon;
+        }
+        
+        function clearInputs() {
+            document.getElementById('urlInput').value = '';
+            document.getElementById('tabNameInput').value = '';
+            document.getElementById('iconInput').value = '';
+        }
+        
+        function isValidUrl(string) {
+            const urlPattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w\- ./?%&=]*)?$/i;
+            return urlPattern.test(string);
+        }
+
+        function openInAboutBlank() {
+            const url = document.getElementById('urlInput').value.trim();
+            const tabName = document.getElementById('tabNameInput').value.trim();
+            const iconUrl = document.getElementById('iconInput').value.trim();
+
+            if (!url || !isValidUrl(url)) {
+                alert('Please enter a valid URL (e.g., https://example.com)');
+                return;
+            }
+
+            const formattedUrl = url.match(/^https?:\/\//) ? url : 'https://' + url;
+            const formattedIconUrl = iconUrl.match(/^https?:\/\//) ? iconUrl : (iconUrl ? 'https://' + iconUrl : '');
+            const formattedTabName = tabName || 'Website';
+
+            const blankWindow = window.open('about:blank', '_blank');
+
+            if (blankWindow) {
+                blankWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>${formattedTabName}</title>
+                        ${formattedIconUrl ? `<link rel="icon" type="image/x-icon" href="${formattedIconUrl}">` : ''}
+                        <style>
+                            body, html {
+                                margin: 0;
+                                height: 100%;
+                                overflow: hidden;
+                                background: #0a0a0f;
+                            }
+                            #loadingOverlay {
+                                position: fixed;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;
+                                align-items: center;
+                                color: #e8e8f0;
+                                font-family: system-ui, sans-serif;
+                                transition: opacity 0.5s ease;
+                                z-index: 1000;
+                            }
+                            .loader {
+                                width: 50px;
+                                height: 50px;
+                                border: 3px solid rgba(124, 92, 255, 0.2);
+                                border-top-color: #7c5cff;
+                                border-radius: 50%;
+                                animation: spin 1s linear infinite;
+                                margin-bottom: 20px;
+                            }
+                            @keyframes spin {
+                                to { transform: rotate(360deg); }
+                            }
+                            iframe {
+                                width: 100%;
+                                height: 100%;
+                                border: none;
+                                opacity: 0;
+                                transition: opacity 0.5s ease;
+                            }
+                            iframe.loaded {
+                                opacity: 1;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div id="loadingOverlay">
+                            <div class="loader"></div>
+                            <div>Loading...</div>
+                        </div>
+                        <iframe id="contentFrame" src="${formattedUrl}" allowfullscreen></iframe>
+                        <script>
+                            const iframe = document.getElementById('contentFrame');
+                            const overlay = document.getElementById('loadingOverlay');
+                            iframe.onload = function() {
+                                overlay.style.opacity = '0';
+                                setTimeout(() => {
+                                    overlay.style.display = 'none';
+                                    iframe.classList.add('loaded');
+                                }, 500);
+                            };
+                        <\/script>
+                    </body>
+                    </html>
+                `);
+                blankWindow.document.close();
+            } else {
+                alert('Popup blocked. Please allow popups for this site.');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Tools | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .text-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .text-area-container {
+            margin-bottom: var(--space-lg);
+        }
+        
+        .text-area-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .text-area-label span {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .main-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: var(--space-md);
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            line-height: 1.6;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            resize: vertical;
+            outline: none;
+            transition: all var(--transition-fast);
+        }
+        
+        .main-textarea:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        
+        .stats-bar {
+            display: flex;
+            gap: var(--space-lg);
+            padding: var(--space-md);
+            background: var(--oleksyuk-card);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--accent-secondary);
+        }
+        
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        
+        .tools-section {
+            margin-bottom: var(--space-xl);
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px solid var(--oleksyuk-border);
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: var(--space-sm);
+        }
+        
+        .tool-btn {
+            padding: var(--space-md);
+            font-size: 0.8rem;
+            text-align: center;
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+            font-family: inherit;
+        }
+        
+        .tool-btn:hover {
+            background: var(--oleksyuk-hover);
+            color: var(--text-primary);
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+        
+        .tool-btn span {
+            display: block;
+            font-size: 1.5rem;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .action-row {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk Text Tools
+                    </h1>
+                    <p class="page-subtitle">Transform and analyze your text</p>
+                </header>
+                
+                <div class="text-container">
+                    <div class="text-area-container animate-fade-in-up stagger-1">
+                        <div class="text-area-label">
+                            <span>Enter your text below</span>
+                            <span id="charLimit"></span>
+                        </div>
+                        <textarea class="main-textarea" id="mainText" placeholder="Type or paste your text here..." oninput="updateStats()"></textarea>
+                    </div>
+                    
+                    <div class="stats-bar animate-fade-in-up stagger-2">
+                        <div class="stat-item">
+                            <div class="stat-value" id="charCount">0</div>
+                            <div class="stat-label">Characters</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="wordCount">0</div>
+                            <div class="stat-label">Words</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="sentenceCount">0</div>
+                            <div class="stat-label">Sentences</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="lineCount">0</div>
+                            <div class="stat-label">Lines</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="readTime">0</div>
+                            <div class="stat-label">Min Read</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tools-section animate-fade-in-up stagger-3">
+                        <div class="section-title">🔤 Case Conversion</div>
+                        <div class="tools-grid">
+                            <button class="tool-btn" onclick="transformText('upper')">
+                                <span>AA</span>
+                                UPPERCASE
+                            </button>
+                            <button class="tool-btn" onclick="transformText('lower')">
+                                <span>aa</span>
+                                lowercase
+                            </button>
+                            <button class="tool-btn" onclick="transformText('title')">
+                                <span>Aa</span>
+                                Title Case
+                            </button>
+                            <button class="tool-btn" onclick="transformText('sentence')">
+                                <span>Aa.</span>
+                                Sentence
+                            </button>
+                            <button class="tool-btn" onclick="transformText('toggle')">
+                                <span>aA</span>
+                                tOGGLE
+                            </button>
+                            <button class="tool-btn" onclick="transformText('camel')">
+                                <span>aA</span>
+                                camelCase
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="tools-section animate-fade-in-up stagger-4">
+                        <div class="section-title">✨ Text Effects</div>
+                        <div class="tools-grid">
+                            <button class="tool-btn" onclick="transformText('reverse')">
+                                <span>⟲</span>
+                                Reverse
+                            </button>
+                            <button class="tool-btn" onclick="transformText('shuffle')">
+                                <span>🔀</span>
+                                Shuffle
+                            </button>
+                            <button class="tool-btn" onclick="transformText('zalgo')">
+                                <span>Z̷</span>
+                                Zalgo
+                            </button>
+                            <button class="tool-btn" onclick="transformText('spaces')">
+                                <span>A B</span>
+                                Add Spaces
+                            </button>
+                            <button class="tool-btn" onclick="transformText('removeSpaces')">
+                                <span>AB</span>
+                                No Spaces
+                            </button>
+                            <button class="tool-btn" onclick="transformText('trim')">
+                                <span>✂️</span>
+                                Trim
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="action-row animate-fade-in-up stagger-5">
+                        <button class="btn btn-primary" onclick="copyText()">📋 Copy Result</button>
+                        <button class="btn btn-ghost" onclick="clearText()">🗑️ Clear</button>
+                    </div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-6">
+                        ← Back to Tools
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateStats() {
+            const text = document.getElementById('mainText').value;
+            
+            document.getElementById('charCount').textContent = text.length;
+            document.getElementById('wordCount').textContent = text.trim() ? text.trim().split(/\s+/).length : 0;
+            document.getElementById('sentenceCount').textContent = (text.match(/[.!?]+/g) || []).length;
+            document.getElementById('lineCount').textContent = text ? text.split('\n').length : 0;
+            document.getElementById('readTime').textContent = Math.ceil((text.trim().split(/\s+/).length || 0) / 200);
+        }
+        
+        function transformText(type) {
+            const textarea = document.getElementById('mainText');
+            let text = textarea.value;
+            
+            switch (type) {
+                case 'upper':
+                    text = text.toUpperCase();
+                    break;
+                case 'lower':
+                    text = text.toLowerCase();
+                    break;
+                case 'title':
+                    text = text.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+                    break;
+                case 'sentence':
+                    text = text.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, c => c.toUpperCase());
+                    break;
+                case 'toggle':
+                    text = text.split('').map(c => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join('');
+                    break;
+                case 'camel':
+                    text = text.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, c) => c.toUpperCase());
+                    break;
+                case 'reverse':
+                    text = text.split('').reverse().join('');
+                    break;
+                case 'shuffle':
+                    text = text.split('').sort(() => Math.random() - 0.5).join('');
+                    break;
+                case 'zalgo':
+                    const zalgoChars = ['̍','̎','̄','̅','̿','̑','̆','̐','͒','͗','͑','̇','̈','̊','͂','̓','̈́','͊','͋','͌','̃','̂','̌','͐','̀','́','̋','̏','̒','̓','̔','̽','̾','̿','̀','́','͘','̚','͛','͆','̊'];
+                    text = text.split('').map(c => {
+                        if (c === ' ') return c;
+                        const count = Math.floor(Math.random() * 5) + 1;
+                        let result = c;
+                        for (let i = 0; i < count; i++) {
+                            result += zalgoChars[Math.floor(Math.random() * zalgoChars.length)];
+                        }
+                        return result;
+                    }).join('');
+                    break;
+                case 'spaces':
+                    text = text.split('').join(' ');
+                    break;
+                case 'removeSpaces':
+                    text = text.replace(/\s+/g, '');
+                    break;
+                case 'trim':
+                    text = text.trim().replace(/\s+/g, ' ');
+                    break;
+            }
+            
+            textarea.value = text;
+            updateStats();
+        }
+        
+        function copyText() {
+            const text = document.getElementById('mainText').value;
+            if (text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    const btn = event.target;
+                    btn.textContent = '✓ Copied!';
+                    setTimeout(() => btn.textContent = '📋 Copy Result', 2000);
+                });
+            }
+        }
+        
+        function clearText() {
+            document.getElementById('mainText').value = '';
+            updateStats();
+        }
+    </script>
+</body>
+</html>

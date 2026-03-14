@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Tags | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .tags-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .search-bar {
+            margin-bottom: var(--space-xl);
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: var(--space-md) var(--space-lg);
+            font-size: 1rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-md);
+        }
+        
+        .search-bar input:focus {
+            border-color: #5865f2;
+            box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.2);
+        }
+        
+        .tags-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+        
+        .tag-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-md) var(--space-lg);
+            background: var(--oleksyuk-card);
+            border: 1px solid var(--oleksyuk-border);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-normal);
+        }
+        
+        .tag-item:hover {
+            background: var(--oleksyuk-hover);
+            transform: translateX(8px);
+            border-color: #5865f2;
+        }
+        
+        .tag-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+        
+        .tag-emoji {
+            font-size: 1.5rem;
+        }
+        
+        .tag-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .tag-actions {
+            display: flex;
+            gap: var(--space-sm);
+        }
+        
+        .tag-btn {
+            padding: var(--space-xs) var(--space-md);
+            font-size: 0.75rem;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+        
+        .tag-btn.join {
+            background: #5865f2;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .tag-btn.join:hover {
+            background: #4752c4;
+        }
+        
+        .tag-btn.copy {
+            background: rgba(88, 101, 242, 0.1);
+            color: #5865f2;
+            border: 1px solid rgba(88, 101, 242, 0.3);
+        }
+        
+        .tag-btn.copy:hover {
+            background: rgba(88, 101, 242, 0.2);
+        }
+        
+        .tag-btn.copied {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-xl);
+            padding: var(--space-lg);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: #5865f2;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: var(--space-2xl);
+            color: var(--text-secondary);
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">
+                        oleksyuk Discord Tags
+                    </h1>
+                    <p class="page-subtitle">Find and join Discord tag servers</p>
+                </header>
+                
+                <div class="tags-container">
+                    <div class="stats-bar animate-fade-in-up stagger-1">
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalTags">0</div>
+                            <div class="stat-label">Total Tags</div>
+                        </div>
+                    </div>
+                    
+                    <div class="search-bar animate-fade-in-up stagger-2">
+                        <input type="text" id="searchInput" placeholder="🔍 Search tags..." oninput="filterTags()">
+                    </div>
+                    
+                    <div class="tags-list" id="tagsList"></div>
+                    
+                    <div class="no-results hidden" id="noResults">
+                        No tags found matching your search.
+                    </div>
+                </div>
+                
+                <div class="menu-list" style="max-width: 300px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up">
+                        ← Back to Discord
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tags = [
+            { name: '#OWO', emoji: '🔥', url: 'https://discord.gg/pupy' },
+            { name: '#EMH', emoji: '⚡', url: 'https://discord.gg/PnJDuyg7Yj' },
+            { name: '#TRPP', emoji: '💧', url: 'https://discord.gg/MAVrmFd7' },
+            { name: '#DSLC', emoji: '❄️', url: 'https://discord.gg/dislace' },
+            { name: '#YEVA', emoji: '🌿', url: 'https://discord.gg/4CWJkCW' },
+            { name: '#CUTE', emoji: '💗', url: 'https://discord.gg/tibo' },
+            { name: '#MOCO', emoji: '💗', url: 'https://discord.gg/moco' },
+            { name: '#IOS', emoji: '☠️', url: 'https://discord.com/invite/jb' },
+            { name: '#EZ', emoji: '❇️', url: 'https://discord.gg/ySQRwTEckb' },
+            { name: '#CAT', emoji: '💕', url: 'https://discord.gg/asTX2BTP' },
+            { name: '#DINO', emoji: '⚔️', url: 'https://discord.com/invite/MZ8hjnJ7Dch' },
+            { name: '#PRO', emoji: '🌿', url: 'https://discord.gg/BWx6cdAmZM' },
+            { name: '#SOUL', emoji: '💧', url: 'https://discord.gg/xFrgMAzUMc' },
+            { name: '#POLR', emoji: '🔥', url: 'https://discord.gg/polarguild' },
+            { name: '#0...', emoji: '💎', url: 'https://discord.gg/yourmom' },
+            { name: '#FPI', emoji: '🚴', url: 'https://discord.gg/fpi' },
+            { name: '#MEOW', emoji: '🐾', url: 'https://discord.gg/shaun' },
+            { name: '#RAWR', emoji: '🔥', url: 'https://discord.gg/gamersland' },
+            { name: '#STAR', emoji: '🔥', url: 'https://discord.gg/solarballs' },
+            { name: '#VIP', emoji: '⚡', url: 'https://discord.gg/nico-vip' },
+            { name: '#COLB', emoji: '🐝', url: 'https://discord.gg/colbe' },
+            { name: '#DUAL', emoji: '✨', url: 'https://discord.gg/dualview' },
+            { name: '#DEV', emoji: '⚡', url: 'https://discord.gg/reactionroles' },
+            { name: '#CYBR', emoji: '❇️', url: 'https://discord.gg/cyberinfo' },
+            { name: '#LGBT', emoji: '💗', url: 'https://discord.gg/lgbtqia' },
+            { name: '#WTDS', emoji: '🔥', url: 'https://discord.gg/wtuds' },
+            { name: '#VALC', emoji: '⚔️', url: 'https://discord.gg/valcraft' },
+            { name: '#BRUH', emoji: '☠️', url: 'https://discord.gg/FsTBUsBA' },
+            { name: '#DEAD', emoji: '💀', url: 'https://discord.gg/deadtag' },
+            { name: '#Z', emoji: '⚡', url: 'https://discord.gg/uU4E7METsu' },
+            { name: '#1', emoji: '🥇', url: 'https://discord.gg/8YvSJbcUFR' },
+            { name: '#FBI', emoji: '🔍', url: 'https://discord.gg/HaFx4AqCa' },
+            { name: '#666', emoji: '😈', url: 'https://discord.gg/teZjdQMK' },
+            { name: '#404', emoji: '❌', url: 'https://discord.gg/BV98REZSFF' },
+            { name: '#CIA', emoji: '🕵️', url: 'https://discord.gg/fmyvBiEnA6' },
+            { name: '#K3S', emoji: '🔑', url: 'https://discord.gg/R2MW6Y4J2Y' },
+            { name: '#GORE', emoji: '🩸', url: 'https://discord.gg/E6EHZbVKd' },
+            { name: '#X', emoji: '❌', url: 'https://discord.gg/led9P9HKYgr' },
+            { name: '#HAHA', emoji: '😂', url: 'https://discord.gg/kA3WRiv8db' },
+            { name: '#$$', emoji: '💰', url: 'https://discord.gg/SrBqCFQCZe' },
+            { name: '#HURT', emoji: '💔', url: 'https://discord.gg/bdnu96KG7d' },
+            { name: '#WTF', emoji: '🤯', url: 'https://discord.gg/u2WF62DV2D' },
+        ];
+
+        function renderTags(tagsToRender) {
+            const container = document.getElementById('tagsList');
+            container.innerHTML = '';
+            
+            if (tagsToRender.length === 0) {
+                document.getElementById('noResults').classList.remove('hidden');
+                return;
+            }
+            
+            document.getElementById('noResults').classList.add('hidden');
+            
+            tagsToRender.forEach((tag, index) => {
+                const item = document.createElement('div');
+                item.className = 'tag-item animate-fade-in-up';
+                item.style.animationDelay = `${index * 0.03}s`;
+                item.innerHTML = `
+                    <div class="tag-info">
+                        <span class="tag-emoji">${tag.emoji}</span>
+                        <span class="tag-name">${tag.name}</span>
+                    </div>
+                    <div class="tag-actions">
+                        <button class="tag-btn copy" onclick="copyUrl('${tag.url}', this)">Copy</button>
+                        <a href="${tag.url}" target="_blank" class="tag-btn join">Join</a>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function filterTags() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = tags.filter(tag => 
+                tag.name.toLowerCase().includes(query)
+            );
+            renderTags(filtered);
+        }
+
+        function copyUrl(url, btn) {
+            navigator.clipboard.writeText(url).then(() => {
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(() => {
+                alert('Failed to copy URL');
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('totalTags').textContent = tags.length;
+            renderTags(tags);
+        });
+    </script>
+</body>
+</html>

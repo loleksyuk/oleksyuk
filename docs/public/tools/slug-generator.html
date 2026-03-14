@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slug Generator | oleksyuk</title>
+    <link rel="icon" type="image/png" href="https://0bsidian.s3.us-east-2.amazonaws.com/Images/Geometric_Gray_Gemstone-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="card-glass">
+                <header class="page-header animate-fade-in-up">
+                    <h1 class="page-title">Slug Generator</h1>
+                    <p class="page-subtitle">Convert titles and labels into URL-friendly slugs.</p>
+                </header>
+                <div style="max-width: 840px; margin: 0 auto;">
+                    <div class="input-group animate-fade-in-up stagger-1">
+                        <label for="slugInput">Input</label>
+                        <textarea id="slugInput" class="main-textarea" oninput="generateSlug()">oleksyuk Tools Page</textarea>
+                    </div>
+                    <div class="input-group animate-fade-in-up stagger-2" style="margin-top: var(--space-lg);">
+                        <label for="slugOutput">Slug</label>
+                        <input id="slugOutput" type="text" readonly>
+                    </div>
+                    <div class="action-row animate-fade-in-up stagger-3" style="justify-content: flex-start; margin-top: var(--space-lg);">
+                        <button class="btn btn-primary" onclick="copySlug()">Copy Slug</button>
+                    </div>
+                </div>
+                <div class="menu-list" style="max-width: 320px;">
+                    <a href="./index.html" class="menu-link back-link animate-fade-in-up stagger-4">← Back to Tools</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function generateSlug() {
+            const value = document.getElementById('slugInput').value
+                .toLowerCase()
+                .normalize('NFKD')
+                .replace(/[^\w\s-]/g, '')
+                .trim()
+                .replace(/[\s_-]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            document.getElementById('slugOutput').value = value;
+        }
+
+        async function copySlug() {
+            const value = document.getElementById('slugOutput').value;
+            if (!value) return;
+            try {
+                await navigator.clipboard.writeText(value);
+            } catch (error) {
+                window.prompt('Copy slug:', value);
+            }
+        }
+
+        generateSlug();
+    </script>
+</body>
+</html>
